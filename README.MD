@@ -21,8 +21,8 @@ Let’s kickstart your DevOps journey together! 🚀✨
 
 ## 📅 **Jenkins Zero-to-Hero Roadmap**
 
-* ✔️ **Day 01** — [Jenkins Setup using Docker Compose](#)
-* ✔️ **Day 02** — [Jenkins Agent Setup using Docker Compose](#)
+* ✔️ **Day 01** — [Jenkins Setup Using Docker Compose](#)
+* ✔️ **Day 02** — [Jenkins Agent Setup Using Docker Compose](#)
 * ✔️ **Day 03** — [Jenkins Agent Tools Setup on Agent (Local) using Docker Compose](#)
 * ✔️ **Day 04** — [Jenkins Basic Configuration](#)
 * ✔️ **Day 05** — [Jenkins Basic Pipeline Structure](#)
