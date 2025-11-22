@@ -1,6 +1,5 @@
-
 services:
-  # Run another agent on another pc/server (conenct using jenkins@ip:2020)
+  # Run another agent on another pc/server (connect using jenkins@ip:2020)
   agent:
     image: jenkins/ssh-agent:jdk21
     container_name: jenkins_agent
