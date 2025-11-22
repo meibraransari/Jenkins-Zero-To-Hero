@@ -21,13 +21,13 @@ Let’s kickstart your DevOps journey together! 🚀✨
 
 ## 📅 **Jenkins Zero-to-Hero Roadmap**
 
-* ✔️ **Day 01** — ![Jenkins Setup Using Docker Compose](./Day 01 — Jenkins Setup Using Docker Compose/README.MD)
+* ✔️ **Day 01** — [Jenkins Setup Using Docker Compose](./Day 01 — Jenkins Setup Using Docker Compose/README.MD)
 * ✔️ **Day 02** — [Jenkins Agent Setup Using Docker Compose](#)
 * ✔️ **Day 03** — [Jenkins Agent Tools Setup on Agent (Local) using Docker Compose](#)
 * ✔️ **Day 04** — [Jenkins Basic Configuration](#)
 * ✔️ **Day 05** — [Notification setup (Mail, Google Chat)](#)
 * ✔️ **Day 06** — [Jenkins Basic Pipeline Structure](#)
-* ✔️ **Day 07** — [Multistage Pipeline (Single Agent)](#)
+* ✔️ **Day 07** — [Multistage Pipeline (Single Agent)](#)   
 * ✔️ **Day 08** — [Multistage Pipeline (Multiple Agents)](#)
 * ✔️ **Day 09** — [Advanced Pipeline Structure](#)
 * ✔️ **Day 10** — [Docker Build and Push Pipeline](#)
