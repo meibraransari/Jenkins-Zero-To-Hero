@@ -55,6 +55,7 @@ Follow these steps to deploy the Jenkins Agent:
     Start the container to create the required volume mounts, then immediately bring it down to fix permissions.
     ```bash
     docker compose up -d
+    docker compose down
     ```
 
 3.  **Fix Permissions:**
