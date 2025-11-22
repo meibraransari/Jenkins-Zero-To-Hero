@@ -4,6 +4,10 @@ Welcome to **Day 01** of the DevOps Jenkins series!
 Today, we will set up **Jenkins** using **Docker Compose**, generate SSH keys for agents, and launch Jenkins in just a few minutes.
 Let’s begin! 🎯
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/QhkCKXNMR6M/maxresdefault.jpg)](https://youtu.be/QhkCKXNMR6M)
+
 ## 🧱 **1. Project Structure Overview**
 
 Your directory should contain:
