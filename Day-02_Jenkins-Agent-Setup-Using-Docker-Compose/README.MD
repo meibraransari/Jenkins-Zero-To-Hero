@@ -8,7 +8,6 @@ This guide will help you set up a Jenkins Agent using Docker Compose.
 [![Watch on Youtube](https://i.ytimg.com/vi/QDbhZLnmg1M/maxresdefault.jpg)](https://youtu.be/QDbhZLnmg1M)
 
 
-
 ## 📋 Prerequisites
 
 Ensure you have Docker and Docker Compose installed on your machine.
