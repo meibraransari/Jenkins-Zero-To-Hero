@@ -1,0 +1,33 @@
+
+services:
+  # Run another agent on another pc/server (conenct using jenkins@ip:2020)
+  agent:
+    image: jenkins/ssh-agent:jdk21
+    container_name: jenkins_agent
+    restart: always
+    privileged: false
+    #user: jenkins
+    user: root
+    ports:
+      - "2020:22"
+    environment:
+      - JENKINS_AGENT_SSH_PUBKEY=${JENKINS_AGENT_SSH_PUBLIC_KEY}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - TZ=UTC
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker                         # Optional, some systems need this
+      - ./JENKINS_AGENT_DATA_DIR/agent_dind_data:/var/lib/docker      # Persistent Docker storage volume
+      - ./JENKINS_AGENT_DATA_DIR/workspace:/home/jenkins/workspace    # Workspace Directory
+      - ./JENKINS_AGENT_DATA_DIR/tools:/tools                         # Tools Directory if required
+      - /usr/bin/git:/usr/bin/git                               # Point additional tools
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 22 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1g
