@@ -30,7 +30,6 @@ Follow these steps to deploy the Jenkins Agent:
         ports:
         - "2020:22"
         environment:
-        - JENKINS_AGENT_SSH_PUBKEY=${JENKINS_AGENT_SSH_PUBLIC_KEY}
         - DOCKER_HOST=unix:///var/run/docker.sock
         - TZ=UTC
         volumes:
