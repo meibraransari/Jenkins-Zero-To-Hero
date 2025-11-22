@@ -1,0 +1,47 @@
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Print Basic Info') {
+            steps {
+                echo "======================"
+                echo "   Jenkins Pipeline"
+                echo "======================"
+
+                echo "Hello from Jenkins Pipeline!"
+                echo "Current Timestamp: ${new Date()}"
+
+                // Job / Build Info
+                echo "Workspace: ${env.WORKSPACE}"
+                echo "Build Number: ${env.BUILD_NUMBER}"
+                echo "Job Name: ${env.JOB_NAME}"
+                echo "Job Base Name: ${env.JOB_BASE_NAME}"
+                echo "Job Display Name: ${env.JOB_DISPLAY_NAME}"
+                echo "Build ID: ${env.BUILD_ID}"
+                echo "Build Tag: ${env.BUILD_TAG}"
+
+                // Node Info
+                echo "Node Name: ${env.NODE_NAME}"
+                echo "Node Labels: ${env.NODE_LABELS}"
+                echo "Executor Number: ${env.EXECUTOR_NUMBER}"
+
+                // Jenkins URLs
+                echo "Jenkins URL: ${env.JENKINS_URL}"
+                echo "Build URL: ${env.BUILD_URL}"
+                echo "Job URL: ${env.JOB_URL}"
+
+                // Git Info (if you checked out a repo)
+                echo "Git Branch: ${env.GIT_BRANCH}"
+                echo "Git Commit: ${env.GIT_COMMIT}"
+                echo "Git URL: ${env.GIT_URL}"
+
+                // User information (requires plugin)
+                echo "User Who Triggered Build: ${env.BUILD_USER}"
+
+                // Build cause (requires build-user-vars plugin)
+                echo "Build Cause: ${env.BUILD_CAUSE}"
+            }
+        }
+    }
+}
