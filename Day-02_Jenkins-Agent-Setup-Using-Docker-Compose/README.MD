@@ -17,39 +17,40 @@ Follow these steps to deploy the Jenkins Agent:
     ```
 
 2.  **Set Compose file:**
-    ```yaml   
-    services:
-    # Run another agent on another pc/server (conenct using jenkins@ip:2020)
-    agent:
-        image: jenkins/ssh-agent:jdk21
-        container_name: jenkins_agent
-        restart: always
-        privileged: false
-        #user: jenkins
-        user: root
-        ports:
-        - "2020:22"
-        environment:
-        - DOCKER_HOST=unix:///var/run/docker.sock
-        - TZ=UTC
-        volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - /usr/bin/docker:/usr/bin/docker                         # Optional, some systems need this
-        - ./JENKINS_AGENT_DATA_DIR/agent_dind_data:/var/lib/docker      # Persistent Docker storage volume
-        - ./JENKINS_AGENT_DATA_DIR/workspace:/home/jenkins/workspace    # Workspace Directory
-        - ./JENKINS_AGENT_DATA_DIR/tools:/tools                         # Tools Directory if required
-        - /usr/bin/git:/usr/bin/git                               # Point additional tools
-        healthcheck:
-        test: ["CMD-SHELL", "nc -z localhost 22 || exit 1"]
-        interval: 30s
-        timeout: 5s
-        retries: 5
-        deploy:
-        resources:
-            limits:
-            cpus: '1.0'
-            memory: 1g
-    ```
+```yaml   
+services:
+  # Run another agent on another pc/server (connect using jenkins@ip:2020)
+  agent:
+    image: jenkins/ssh-agent:jdk21
+    container_name: jenkins_agent
+    restart: always
+    privileged: false
+    #user: jenkins
+    user: root
+    ports:
+      - "2020:22"
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - TZ=UTC
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker                         # Optional, some systems need this
+      - ./JENKINS_AGENT_DATA_DIR/agent_dind_data:/var/lib/docker      # Persistent Docker storage volume
+      - ./JENKINS_AGENT_DATA_DIR/workspace:/home/jenkins/workspace    # Workspace Directory
+      - ./JENKINS_AGENT_DATA_DIR/tools:/tools                         # Tools Directory if required
+      - /usr/bin/git:/usr/bin/git                               # Point additional tools
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 22 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1g
+
+```
 
     Start the container to create the required volume mounts, then immediately bring it down to fix permissions.
     ```bash
