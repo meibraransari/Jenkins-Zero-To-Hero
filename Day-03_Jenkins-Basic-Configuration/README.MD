@@ -30,6 +30,10 @@ https://npm.devopsinaction.lab
 | `jenkins.devopsinaction.lab` | `192.168.1.102` | `8080`  | ✅ Yes  | ✅ Yes        |
 
 
+Access jenkins with:
+[https://jenkins.devopsinaction.lab/](https://jenkins.devopsinaction.lab/)
+
+
 ## 🛠️ Global Tool Configuration
 
 We need to tell Jenkins where to find the tools it needs to build our projects. Go to **Dashboard** > **Manage Jenkins** > **Tools**.
@@ -144,7 +148,7 @@ Plugins extend Jenkins functionality. Let's ensure we have some basics.
 Configure the following settings:
 
 * **Jenkins URL:**
-  *(Set your server URL, e.g., `http://<jenkins-server>:8080/`)*
+  *(Set your server URL, e.g., `https://jenkins.devopsinaction.lab/`)*
 
 * **System Admin E-mail Address:**
   *(Used for notifications and system alerts)*
