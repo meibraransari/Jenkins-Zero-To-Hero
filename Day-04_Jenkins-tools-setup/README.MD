@@ -237,6 +237,11 @@ You can use full example of jenkinsfile from this repository.
 ```groovy
 pipeline {
     agent { label 'sg' }
+    // Global tools used in pipeline
+    // tools {
+    //     maven 'Maven'     // Jenkins Maven tool name (configure in Global Tools)
+    //     gradle 'Gradle'   // Jenkins Gradle tool name (configure in Global Tools)
+    // }
     environment {
         // Tool paths
         JAVA_HOME       = "/tools/java"
