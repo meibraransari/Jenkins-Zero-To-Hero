@@ -27,7 +27,7 @@ https://npm.devopsinaction.lab
 
 | 🌍 Domain                                                          | 🖥️ IP          | 🔌 Port | 🔐 SSL | 🚦 Force SSL |
 | ------------------------------------------------------------------ | --------------- | ------- | ------ | ------------ |
-| [https://jenkins.devopsinaction.lab/](https://jenkins.devopsinaction.lab/) | `192.168.1.102` | `8080`  | ✅ Yes  | ✅ Yes        |
+| [jenkins.devopsinaction.lab](jenkins.devopsinaction.lab) | `192.168.1.102` | `8080`  | ✅ Yes  | ✅ Yes        |
 
 
 ## 🛠️ Global Tool Configuration
