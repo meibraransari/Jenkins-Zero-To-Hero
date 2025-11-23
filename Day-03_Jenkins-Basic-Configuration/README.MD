@@ -196,53 +196,90 @@ Add the following HTML to display a styled header:
 
 Let's create a simple job to verify that our Agent (`mgmt`) is working and can execute commands.
 
-1.  **New Item**:
-    *   Go to **Dashboard** > **New Item**.
-    *   **Enter an item name:** `Agent-Connectivity-Test`.
-    *   Select **Freestyle project**.
-    *   Click **OK**.
+stage view pipeline
+```
+pipeline {  
+    agent any  
+    stages {  
+            stage ('Build') {  
+				steps {
+					echo 'Building the application....'
+				}
+            }  
+            stage ('Test') {  
+				steps {
+					echo 'Testing the application....'
+				}  
+            }   
+            stage ('Deploy') {  
+				steps {
+					echo 'Deploying the application....'
+				}  
+            }  
+            stage ('Monitor') {  
+				steps {
+					echo 'Monitoring the application....'
+				}  
+            }  
+    } 
+	post {
+        always {
+            echo 'application....'
+        }
 
-2.  **Configure**:
-    *   **General**:
-        *   Check **Restrict where this project can be run**.
-        *   **Label Expression:** `mgmt` (This matches the label we gave our agent in Day 02).
-    *   **Build Steps**:
-        *   Click **Add build step** > **Execute shell**.
-        *   **Command:**
-            ```bash
-            echo "🎉 Hello from the Agent!"
-            hostname
-            whoami
-            java -version
-            mvn -version
-            ```
-    *   Click **Save**.
+        success {
+            echo 'application....'
+        }
 
-3.  **Build Now**:
-    *   Click **Build Now** on the left sidebar.
-    *   Click on the build number (e.g., `#1`) under **Build History**.
-    *   Click **Console Output**.
+        failure {
+            echo 'application....'
+        }
+    } 
+}
+```
 
-### ✅ Expected Output
+System information pipeline
+```
+pipeline {
+    agent any
+    
+    stages {
+        stage('Collect System Information') {
+            steps {
+                sh '''
+                    #!/bin/bash
+                    # Script to collect system information
 
-You should see something like this:
+                    # Hostname
+                    echo "Hostname: $(hostname)"
 
-```text
-Started by user admin
-Running as SYSTEM
-Building remotely on mgmt in workspace /home/jenkins/workspace/Agent-Connectivity-Test
-[Agent-Connectivity-Test] $ /bin/sh -xe /tmp/jenkins73842934.sh
-+ echo 🎉 Hello from the Agent!
-🎉 Hello from the Agent!
-+ hostname
-jenkins_agent
-+ whoami
-jenkins
-+ java -version
-openjdk version "17.0.x" ...
-+ mvn -version
-Apache Maven 3.9.x ...
-Finished: SUCCESS
+                    # Kernel Version
+                    echo "Kernel Version: $(uname -r)"
+
+                    # Operating System
+                    echo "Operating System: $(lsb_release -ds || cat /etc/*release || uname -om)"
+
+                    # CPU Information
+                    echo "CPU Information:"
+                    lscpu
+
+                    # Memory Information
+                    echo "Memory Information:"
+                    free -h
+
+                    # Disk Space
+                    echo "Disk Space:"
+                    df -h
+
+                    # Installed Packages
+                    echo "Installed Packages:"
+                    dpkg -l || rpm -qa
+                '''
+            }
+        }
+    }
+}
+
 ```
 
 If you see **SUCCESS**, congratulations! Your Jenkins setup is correctly configured and communicating with the Agent. 🚀
