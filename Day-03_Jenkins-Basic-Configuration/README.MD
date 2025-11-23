@@ -13,16 +13,21 @@ Now that we have our Jenkins Server and Agent running (thanks to Day 01 & 02), i
 
 ## 🌐 DNS Pointing
 
-| 🔗 URL                                                                               | 🏷️ Hostname                 | 🖥️ IP          |
-| ------------------------------------------------------------------------------------ | ---------------------------- | --------------- |
-| [https://pihole.devopsinaction.lab/admin/](https://pihole.devopsinaction.lab/admin/) | `jenkins.devopsinaction.lab` | `192.168.1.102` |
+https://pihole.devopsinaction.lab/admin/
+
+| 🏷️ Hostname                 | 🖥️ IP          |
+| ---------------------------- | --------------- |
+| `jenkins.devopsinaction.lab` | `192.168.1.102` |
 
 
 ## ⚙️ Nginx Proxy Manager Configuration
 
+https://npm.devopsinaction.lab
+
+
 | 🌍 Domain                                                          | 🖥️ IP          | 🔌 Port | 🔐 SSL | 🚦 Force SSL |
 | ------------------------------------------------------------------ | --------------- | ------- | ------ | ------------ |
-| [https://npm.devopsinaction.lab/](https://npm.devopsinaction.lab/) | `192.168.1.100` | `8080`  | ✅ Yes  | ✅ Yes        |
+| [https://jenkins.devopsinaction.lab/](https://jenkins.devopsinaction.lab/) | `192.168.1.102` | `8080`  | ✅ Yes  | ✅ Yes        |
 
 
 ## 🛠️ Global Tool Configuration
