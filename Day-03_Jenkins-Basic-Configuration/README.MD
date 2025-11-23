@@ -180,7 +180,19 @@ Add the following HTML to display a styled header:
 </h1>
 ```
 
-### 9. 🧪 Verify Setup with a Test Job
+### 9. 🏠 Customize Jenkins Job Description
+Select job > configure
+
+Add the following HTML to display a styled header:
+
+```html
+<b>Demo Environment</b> <br>
+<b>Git: </b> https://github.com/meibraransari/Jenkins-Zero-To-Hero.git <br>
+<b>Branch: </b> Main <br>
+<b>Domain: </b> NA <br>
+```
+
+### 10. 🧪 Verify Setup with a Test Job
 
 Let's create a simple job to verify that our Agent (`mgmt`) is working and can execute commands.
 
