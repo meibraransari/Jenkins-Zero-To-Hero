@@ -10,6 +10,21 @@ Now that we have our Jenkins Server and Agent running (thanks to Day 01 & 02), i
 *   Jenkins Agent (`mgmt`) is connected.
 *   You have administrative access to Jenkins.
 
+
+## 🌐 DNS Pointing
+
+| 🔗 URL                                                                               | 🏷️ Hostname                 | 🖥️ IP          |
+| ------------------------------------------------------------------------------------ | ---------------------------- | --------------- |
+| [https://pihole.devopsinaction.lab/admin/](https://pihole.devopsinaction.lab/admin/) | `jenkins.devopsinaction.lab` | `192.168.1.102` |
+
+
+## ⚙️ Nginx Proxy Manager Configuration
+
+| 🌍 Domain                                                          | 🖥️ IP          | 🔌 Port | 🔐 SSL | 🚦 Force SSL |
+| ------------------------------------------------------------------ | --------------- | ------- | ------ | ------------ |
+| [https://npm.devopsinaction.lab/](https://npm.devopsinaction.lab/) | `192.168.1.100` | `8080`  | ✅ Yes  | ✅ Yes        |
+
+
 ## 🛠️ Global Tool Configuration
 
 We need to tell Jenkins where to find the tools it needs to build our projects. Go to **Dashboard** > **Manage Jenkins** > **Tools**.
