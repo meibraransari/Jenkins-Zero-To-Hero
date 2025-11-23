@@ -97,6 +97,11 @@ Plugins extend Jenkins functionality. Let's ensure we have some basics.
 
 1.  Go to **Manage Jenkins** > **Plugins**.
 2.  Click on **Available plugins**.
+- Safe Restart
+- Stage View
+- Active Choices
+- generic-webhook-trigger
+- Google Chat Notification
 3.  Search for and install these recommended plugins if you don't have them:
     * **Rebuilder**: Allows you to rebuild a job with the same parameters.
     * **Safe Restart**: Adds a link to safely restart Jenkins.
