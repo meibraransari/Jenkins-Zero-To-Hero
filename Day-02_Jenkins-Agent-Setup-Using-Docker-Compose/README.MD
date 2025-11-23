@@ -103,6 +103,16 @@ Once the agent container is running, configure it in the Jenkins Dashboard.
         *   **Port:** `2020` (Check `compose.yaml` if changed)
 
 
+### 🔧 Set — Set file system permissions on the agent
+
+Agent required to set correct permissions on the workspace and tools directory.
+
+```bash
+docker exec -it jenkins_agent bash -c "chown -R jenkins:jenkins /home/jenkins/workspace"
+docker exec -it jenkins_agent bash -c "chown -R jenkins:jenkins /tools"
+```
+
+
 ## 🧠 About This Project
 
 This project is maintained by **DevOps In Action**, mainly focusing on practical, hands-on DevOps setups for CI/CD automation, containerization, and infrastructure management.
