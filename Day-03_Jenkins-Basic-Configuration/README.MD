@@ -4,6 +4,11 @@ Welcome to **Day 03**!
 
 Now that we have our Jenkins Server and Agent running (thanks to Day 01 & 02), it's time to configure the tools and plugins that will power our pipelines.
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/hbQR8_9rpBc/maxresdefault.jpg)](https://youtu.be/hbQR8_9rpBc)
+
+
 ## 📋 Prerequisites
 
 *   Jenkins Server is up and running.
