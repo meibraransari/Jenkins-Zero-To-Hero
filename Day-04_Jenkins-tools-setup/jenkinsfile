@@ -1,0 +1,122 @@
+pipeline {
+    agent { label 'sg' }
+    environment {
+        // Tool paths
+        JAVA_HOME       = "/tools/java"
+        MAVEN_HOME      = "/tools/maven"
+        GRADLE_HOME     = "/tools/gradle"
+        NODE20_HOME     = "/tools/node20"
+        NODE22_HOME     = "/tools/node22"
+        YARN_HOME       = "/tools/yarn"
+        DOCKER_HOME     = "/tools/docker"
+        DOCKER_BUILDX   = "/tools/docker-buildx"
+        // PATH
+        PATH = "${env.JAVA_HOME}/bin:" +
+               "${env.MAVEN_HOME}/bin:" +
+               "${env.GRADLE_HOME}/bin:" +
+               "${env.YARN_HOME}/bin:" +
+               "${env.NODE22_HOME}/bin:" +
+               "${env.DOCKER_HOME}:" +
+               "${env.DOCKER_BUILDX}:" +
+               "${env.PATH}"
+    }
+    options {
+        // Keep build logs for 30 days, max 50 builds
+        buildDiscarder(logRotator(daysToKeepStr: '30', numToKeepStr: '50'))
+        timestamps() // Adds timestamps to console log
+    }
+    stages {
+
+        stage('Checkout') {
+            when { expression { true } }
+            steps {
+                echo "🔄 Checking out source code..."
+                git branch: 'main', url: 'https://github.com/meibraransari/Jenkins-Zero-To-Hero.git'
+            }
+        }
+
+        stage('Verify Tools') {
+            when { expression { true } }
+            steps {
+                echo "🛠 Verifying installed tools..."
+                sh '''
+                    echo "JAVA:"; java --version
+                    echo "Maven:"; mvn -version
+                    echo "Gradle:"; gradle -v
+                    echo "Node:"; node -v
+                    echo "Yarn:"; yarn -v
+                    echo "Docker:"; docker --version
+                    echo "Docker Buildx:"; docker-buildx version || echo "Buildx not found"
+                '''
+            }
+        }
+
+        stage('Build') {
+            when { expression { true } }
+            steps {
+                echo "🏗 Building the project..."
+                sh '''
+                    echo "Executing Build stage..."
+                    # Example: Gradle build
+                    #gradle clean build -x test
+                '''
+            }
+        }
+
+        stage('Test') {
+            when { expression { true } }
+            steps {
+                echo "🧪 Running tests..."
+                sh '''
+                    echo "Executing Test stage..."
+                    # Example: Run tests using Maven
+                    #mvn test
+                '''
+            }
+        }
+
+        stage('Docker Build & Push') {
+            when { expression { true } }
+            steps {
+                echo "🐳 Building Docker image with Buildx..."
+                sh '''
+                    echo "Executing Docker Build & Push stage..."
+                    # Initialize builder if it doesn't exist
+                    #docker-buildx create --use --name mybuilder || echo "Builder already exists"
+                    #docker-buildx inspect --bootstrap
+                    
+                    # Build multi-arch image
+                    #docker-buildx build --platform linux/amd64,linux/arm64 -t myapp:latest --push .
+                '''
+            }
+        }
+        stage('Cleanup') {
+            steps {
+                echo "🧹 Cleaning up workspace..."
+                cleanWs()
+            }
+        }
+    }
+
+post {
+        success {
+            echo "✅ Pipeline completed successfully!"
+            mail to: 'team@example.com',
+                 subject: "Jenkins Build SUCCESS: ${currentBuild.fullDisplayName}",
+                 body: "Good news! The build completed successfully.\n\nCheck console output at: ${env.BUILD_URL}"
+        }
+        failure {
+            echo "❌ Pipeline failed. Check logs for details."
+            mail to: 'team@example.com',
+                 subject: "Jenkins Build FAILURE: ${currentBuild.fullDisplayName}",
+                 body: "The build failed. Please check the console output:\n${env.BUILD_URL}"
+        }
+        always {
+            echo "🔔 Pipeline finished."
+            // Optional: send a summary email
+            // mail to: 'team@example.com',
+            //      subject: "Jenkins Build Finished: ${currentBuild.fullDisplayName}",
+            //      body: "Build finished (status: ${currentBuild.currentResult}). See details: ${env.BUILD_URL}"
+        }
+    }
+}
