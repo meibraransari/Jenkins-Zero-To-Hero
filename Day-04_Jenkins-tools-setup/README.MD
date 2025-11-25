@@ -1,10 +1,15 @@
-# Day 04: Jenkins Agent Tools Setup
+# 🚀 Day 04: Jenkins Agent Tools Setup
 
 This directory contains scripts and configurations to set up a comprehensive development environment on a Jenkins agent. It includes a shell script to install various build tools and a sample `Jenkinsfile` demonstrating how to use them in a pipeline.
 
 ## 🎯 Objective
 
 To automate the installation of essential build tools (Java, Maven, Gradle, Node.js, Docker) on a Jenkins agent and configure a Jenkins pipeline to utilize these tools without relying on global system installations.
+
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/Wu58IY3Z2rI/maxresdefault.jpg)](https://youtu.be/Wu58IY3Z2rI)
+
 
 ## 🛠️ Tools will be Installed
 
