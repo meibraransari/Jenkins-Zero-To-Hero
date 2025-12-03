@@ -134,9 +134,7 @@ To automate daily backups at 2 AM:
 crontab -e
 
 # Add this line (adjust path as needed)
-0 2 * * * /path/to/backup_and_restore.sh << EOF
-1
-EOF
+0 2 * * * /path/to/backup_and_restore.sh
 ```
 
 ## 🐛 Troubleshooting
