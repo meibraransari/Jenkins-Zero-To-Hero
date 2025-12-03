@@ -25,17 +25,17 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day 02** — [Jenkins Agent Setup Using Docker Compose](./Day-02_Jenkins-Agent-Setup-Using-Docker-Compose/README.MD)
 * ✔️ **Day 03** — [Jenkins Basic Configuration](./Day-03_Jenkins-Basic-Configuration/README.MD)
 * ✔️ **Day 04** — [Jenkins Agent Tools Setup on Agent (Local) using Docker Compose](./Day-04_Jenkins-tools-setup/README.MD)
-* ⌛ **Day 05** — [Notification setup (Mail, Google Chat)](#)
-* ⌛ **Day 06** — [Jenkins Basic Pipeline Structure](#)
-* ⌛ **Day 07** — [Multistage Pipeline (Single Agent)](#)   
-* ⌛ **Day 08** — [Multistage Pipeline (Multiple Agents)](#)
-* ⌛ **Day 09** — [Advanced Pipeline Structure](#)
-* ⌛ **Day 10** — [Docker Build and Push Pipeline](#)
-* ⌛ **Day 11** — [Build a Node.js/Angular Project](#)
-* ⌛ **Day 12** — [Build a Maven/Gradle Project](#)
-* ⌛ **Day 13** — [Jenkins User Management](#)
-* ⌛ **Day 14** — [Jenkins Job Backup & Restore](#)
-* ⌛ **Day 15** — [Jenkins Server Upgrade](#)
-* ⌛ **Day 16** — [Terraform Automation with Jenkins](#) - Will cover in Terraform Series.
-* ⌛ **Day 17** — [Ansible Deployment Pipeline](#) - Will cover in Ansible Series.
-* ⌛ **Day 18** — [Kubernetes Deployment](#)  - Will cover in Kubernetes Series.
+* ✔️ **Day ⌛** — [Notification setup (Mail, Google Chat)](#)
+* ✔️ **Day ⌛** — [Jenkins Basic Pipeline Structure](#)
+* ✔️ **Day ⌛** — [Multistage Pipeline (Single Agent)](#)   
+* ✔️ **Day ⌛** — [Multistage Pipeline (Multiple Agents)](#)
+* ✔️ **Day ⌛** — [Advanced Pipeline Structure](#)
+* ✔️ **Day ⌛** — [Docker Build and Push Pipeline](#)
+* ✔️ **Day ⌛** — [Build a Node.js/Angular Project](#)
+* ✔️ **Day ⌛** — [Build a Maven/Gradle Project](#)
+* ✔️ **Day ⌛** — [Jenkins User Management](#)
+* ✔️ **Day ⌛** — [Jenkins Job Backup & Restore](#)
+* ✔️ **Day ⌛** — [Jenkins Server Upgrade](#)
+* ✔️ **Day ⌛** — [Terraform Automation with Jenkins](#) - Will cover in Terraform Series.
+* ✔️ **Day ⌛** — [Ansible Deployment Pipeline](#) - Will cover in Ansible Series.
+* ✔️ **Day ⌛** — [Kubernetes Deployment](#)  - Will cover in Kubernetes Series.
