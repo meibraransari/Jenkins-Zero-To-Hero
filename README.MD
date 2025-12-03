@@ -25,6 +25,7 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day 02** — [Jenkins Agent Setup Using Docker Compose](./Day-02_Jenkins-Agent-Setup-Using-Docker-Compose/README.MD)
 * ✔️ **Day 03** — [Jenkins Basic Configuration](./Day-03_Jenkins-Basic-Configuration/README.MD)
 * ✔️ **Day 04** — [Jenkins Agent Tools Setup on Agent (Local) using Docker Compose](./Day-04_Jenkins-tools-setup/README.MD)
+* ✔️ **Day 05** — [Backup & Restore of Jenkins](./Day-05_Jenkins-Backup-Restore/README.MD)
 * ✔️ **Day ⌛** — [Notification setup (Mail, Google Chat)](#)
 * ✔️ **Day ⌛** — [Jenkins Basic Pipeline Structure](#)
 * ✔️ **Day ⌛** — [Multistage Pipeline (Single Agent)](#)   
