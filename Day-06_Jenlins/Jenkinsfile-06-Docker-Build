@@ -1,0 +1,34 @@
+// Docker Agent Build
+// Demonstrates using Docker container for specific build stage
+//
+// REQUIRED JENKINS PLUGINS:
+// - Docker Pipeline Plugin (docker-workflow)
+// - Docker Plugin (docker-plugin)
+//
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out code...'
+            }
+        }
+        
+        stage('Build in Docker') {
+            agent {
+                docker { image 'node:18' }
+            }
+            steps {
+                sh "node -v"
+                echo 'Building application in Docker container'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+            }
+        }
+    }
+}

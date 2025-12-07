@@ -1,0 +1,33 @@
+// Timeout Configuration
+// Demonstrates timeout for long-running operations
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    echo 'Building with 10 minute timeout...'
+                    // Add build logic
+                }
+            }
+        }
+        
+        stage('Timeout Test') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    sh "sleep 600"
+                    echo 'This will timeout if it takes more than 5 minutes'
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                timeout(time: 15, unit: 'MINUTES') {
+                    echo 'Deploying with 15 minute timeout...'
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+// Workspace Synchronization
+// Demonstrates workspace synchronization with Docker using reuseNode
+//
+// REQUIRED JENKINS PLUGINS:
+// - Docker Pipeline Plugin (docker-workflow)
+// - Docker Plugin (docker-plugin)
+//
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'node --version'
+                echo 'Using same workspace as parent agent'
+            }
+        }
+    }
+}

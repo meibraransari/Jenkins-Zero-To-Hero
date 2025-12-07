@@ -1,0 +1,54 @@
+// Multi-Cloud Deployment
+// Demonstrates deployment to multiple cloud providers (AWS and GCP)
+//
+// REQUIRED JENKINS PLUGINS:
+// - Kubernetes CLI Plugin (kubernetes-cli)
+// - AWS Credentials Plugin (aws-credentials) - optional
+//
+// ADDITIONAL SETUP:
+// - Install AWS CLI on Jenkins agent
+// - Install gcloud CLI on Jenkins agent
+// - Install kubectl on Jenkins agent
+// - Configure AWS credentials and kubeconfig
+// - Set up authentication for both AWS EKS and GCP GKE
+//
+pipeline {
+    agent any
+    
+    environment {
+        AWS_REGION = 'us-east-1'
+        GCP_ZONE = 'us-central1'
+        EKS_CLUSTER = 'my-eks'
+        GKE_CLUSTER = 'my-gke'
+    }
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+            }
+        }
+        
+        stage('Deploy to AWS') {
+            steps { 
+                sh 'aws eks update-kubeconfig --name ${EKS_CLUSTER} --region ${AWS_REGION}'
+                sh 'kubectl apply -f k8s/aws/'
+                echo 'Deployed to AWS EKS'
+            }
+        }
+        
+        stage('Deploy to GCP') {
+            steps { 
+                sh 'gcloud container clusters get-credentials ${GKE_CLUSTER} --zone ${GCP_ZONE}'
+                sh 'kubectl apply -f k8s/gcp/'
+                echo 'Deployed to GCP GKE'
+            }
+        }
+        
+        stage('Verify Deployments') {
+            steps {
+                echo 'Verifying deployments on both clouds...'
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+// Git Checkout Stage
+// Demonstrates explicit Git checkout
+//
+// REQUIRED JENKINS PLUGINS:
+// - Git Plugin (git) - usually pre-installed
+//
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/example/project.git'
+                echo 'Repository checked out successfully'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                echo 'Building from checked out code...'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+    }
+}

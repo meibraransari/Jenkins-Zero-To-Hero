@@ -1,0 +1,36 @@
+// SCM Polling and Webhook Trigger
+// Demonstrates automatic build triggering using SCM polling
+//
+// REQUIRED JENKINS PLUGINS:
+// - Git Plugin (git) - usually pre-installed
+// - Pipeline: SCM Step (workflow-scm-step)
+//
+pipeline {
+    agent any
+    
+    triggers {
+        pollSCM('* * * * *') // Poll every minute, or use GitHub webhook
+    }
+    
+    stages {
+        stage('Checkout') { 
+            steps { 
+                git url: 'https://github.com/org/repo.git'
+                echo 'Code checked out'
+            } 
+        }
+        
+        stage('Build') { 
+            steps { 
+                sh 'mvn clean package'
+                echo 'Build completed'
+            } 
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+    }
+}

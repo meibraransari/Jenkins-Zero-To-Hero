@@ -1,0 +1,37 @@
+// Parallel Microservices Build
+// Demonstrates building multiple microservices in parallel
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build Services') {
+            parallel {
+                stage('Service A') { 
+                    steps { 
+                        sh 'cd serviceA && ./build.sh'
+                        echo 'Service A built successfully'
+                    } 
+                }
+                stage('Service B') { 
+                    steps { 
+                        sh 'cd serviceB && ./build.sh'
+                        echo 'Service B built successfully'
+                    } 
+                }
+                stage('Service C') { 
+                    steps { 
+                        sh 'cd serviceC && ./build.sh'
+                        echo 'Service C built successfully'
+                    } 
+                }
+            }
+        }
+        
+        stage('Deploy Services') {
+            steps {
+                sh './deploy_all_services.sh'
+                echo 'All services deployed'
+            }
+        }
+    }
+}

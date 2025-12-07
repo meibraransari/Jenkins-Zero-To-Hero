@@ -1,0 +1,39 @@
+// Copy Artifacts from Another Job
+// Demonstrates copying artifacts from another Jenkins job
+//
+// REQUIRED JENKINS PLUGINS:
+// - Copy Artifact Plugin (copyartifact)
+//
+// ADDITIONAL SETUP:
+// - Ensure source job 'other-job' exists and archives artifacts
+// - Configure permissions for copying artifacts between jobs
+//
+pipeline {
+    agent any
+    
+    stages {
+        stage('Get Artifacts') {
+            steps {
+                copyArtifacts(
+                    projectName: 'other-job',
+                    filter: '*.jar',
+                    target: 'dependencies/'
+                )
+                echo 'Artifacts copied from other-job'
+            }
+        }
+        
+        stage('Build with Dependencies') {
+            steps {
+                echo 'Building with copied artifacts...'
+                sh 'ls -la dependencies/'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+            }
+        }
+    }
+}

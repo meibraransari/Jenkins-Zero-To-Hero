@@ -1,0 +1,198 @@
+// #Jenkins default env
+// http/s://[Jenkins URL]/env-vars.html
+// http://localhost:8080/env-vars.html
+// https://jenkins.devopsinaction.lab/env-vars.html/
+
+
+
+# Description
+<b>Demo Environment</b> <br>
+<b>Git: </b> https://github.com/meibraransari/Jenkins-Zero-To-Hero.git <br>
+<b>Branch: </b> Main <br>
+<b>Domain: </b> NA <br>
+
+
+
+Dockerfile
+FROM hub.devopsinaction.lab/node:20-alpine AS builder
+WORKDIR /app
+COPY build_info .
+COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+
+FROM alpine
+WORKDIR /app
+COPY --from=builder /app /app
+COPY --from=builder /entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+Entrypoint
+#!/bin/sh
+set -e
+#cd / && node /app/dist/index.js
+echo "Hello"
+sleep infinity
+
+
+pipeline {  
+    // agent any  
+    // agent none
+    agent { label 'management-server' }
+
+    // Define Docker in docker agent here
+    // agent {
+    //     docker {
+    //         image 'node:16.13.1'
+    //         args '-v ${WORKSPACE}:/workspace' // Mount a volume from host to container
+    //     }
+    // }
+
+    // Define Parameter here
+    // parameters {
+    //     choice(name: 'ENVIRONMENT', choices: ['dev', 'qa', 'uat', 'prod'], description: 'Select the target environment')
+    // }
+
+    // Define Global tools here
+    // tools {
+    //     nodejs 'NodeJS 20.11.0'
+    // }
+
+    environment {
+        SSH_HOST = '192.168.1.100'
+        SSH_USER = 'ubuntu'
+        REMOTE_PATH = '/path/on/server'
+        DOCKER_HOST_CREDENTIALS = credentials('fac92b29-9738-4007-9007-0591ce6eea5a')
+        DI_DOCKER_HOST = 'dockerhub.iconflux.info'
+        DI_DOCKER_IMAGE = 'hub.devopsinaction.lab/web-prod'
+        DATE = new Date().format('d.M.YY')
+        DOCKER_IMAGE_TAG = "${DATE}"
+        //DOCKER_IMAGE_TAG = "${DATE}.${BUILD_NUMBER}"
+        DOCKER_LATEST_TAG ="latest"
+        // Plateform
+        PLATFORMS = 'linux/amd64,linux/arm64'
+    }
+    stages {  
+        stage('Environment') {
+            steps {
+                when { expression { true } }
+                agent { label 'cicd-server' }  
+                echo 'Environment'
+                echo "post always"
+                println('----------')
+                println("Number: ${currentBuild.number}")
+                println("Result: ${currentBuild.result}")
+                println("Display name: ${currentBuild.displayName}")
+                println("Expected: ${params.expected}")
+                println('----------')
+                
+                script {
+                   text = "Result: ${currentBuild.result}"
+                }
+                echo "My Result: $text"
+            }
+        }
+        stage('Code checkout') {
+            when { expression { true } }
+            agent { label 'cicd-server' }  
+            steps {
+                git branch: 'main', changelog: false, credentialsId: 'creds', poll: false, url: 'https://github.com/meibraransari/Jenkins-Zero-To-Hero.git'
+                //git branch: "$web_git_branch", credentialsId: "$gitlab_credentials", url: "$web_project_git_url"
+                // sh 'echo "$Dockerfile" | tee > Dockerfile'
+                // sh 'echo "$Entrypoint" | tee > entrypoint.sh'
+                // sh 'rm -rf build_info'
+                // sh 'TZ="Asia/Kolkata" date "+Build Time: %d-%m-%Y %H:%M:%S %Z" | tee -a build_info'
+                // sh 'echo "Jenkins Build Number: ${BUILD_NUMBER}" | tee >> build_info'
+                // sh 'echo "Git Branch: ${web_git_branch}" | tee >> build_info'
+            }
+        }
+        stage ('Build') { 
+            when { expression { true } }
+            agent { label 'cicd-server' } 
+            // Override based on parameters 
+            // when {
+            //     allOf {
+            //         expression { true }
+            //         expression { params.ENVIRONMENT == 'dev' }
+            //     }
+            // }
+            // environment {
+            //     web_git_branch = 'development'
+            //     DOCKER_IMAGE = 'hub.devopsinaction.lab/web-api'
+            // }
+            steps {
+                echo 'Building the application....'
+                sh """
+                    echo '$Dockerfile' > Dockerfile
+                    sed -i -E "s|BUILD_CMD|dev|" Dockerfile
+                    
+                    TZ="Asia/Kolkata" date "+Build Time: %d-%m-%Y %H:%M:%S %Z" > build_info
+                    echo "Jenkins Build Number: ${BUILD_NUMBER}" >> build_info
+                    echo "Git Branch: ${web_git_branch}" >> build_info
+                    
+                    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+                    docker buildx create --name multiarch-builder --use || docker buildx use multiarch-builder
+                    docker buildx inspect --bootstrap
+        
+                    docker buildx build \
+                        --platform=${PLATFORMS} \
+                        --no-cache \
+                        --push \
+                        -t ${DI_DOCKER_IMAGE}:${DOCKER_LATEST_TAG} \
+                        -t ${DI_DOCKER_IMAGE}:${DOCKER_IMAGE_TAG} \
+                        .
+                """
+            }
+        }  
+        stage ('Test') { 
+            when { expression { true } }
+            agent { label 'qa-server' }  
+            steps {
+                echo 'Testing the application....'
+            }  
+        }   
+        stage ('Deploy') { 
+            when { expression { true } }
+            agent { label 'prod-server' }   
+            steps {
+                echo 'Deploying the application....'
+            }  
+        }  
+        stage ('Monitor') { 
+            when { expression { true } }
+            agent { label 'management-server' }   
+            steps {
+                echo 'Monitoring the application....'
+            }  
+        }  
+    } 
+	post {
+        always {
+            echo 'application....'
+        }
+
+        success {
+            echo 'application....'
+            // build(job: 'Deploy_Prod_API', wait: false)
+        }
+
+        failure {
+            echo 'application....'
+        }
+        cleanup {
+            /* clean up our workspace */
+            deleteDir()
+            dir("${workspace}*") {
+                deleteDir()
+            }
+            dir("${workspace}@2") {
+                deleteDir()
+            }
+            dir("${workspace}@2@tmp") {
+                deleteDir()
+            }
+            dir("${workspace}@tmp") {
+                deleteDir()
+            }
+        }
+    } 
+}

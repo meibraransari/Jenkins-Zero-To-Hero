@@ -1,0 +1,270 @@
+// Kubernetes Deployment Pipeline
+// Demonstrates deploying applications to Kubernetes clusters
+//
+// REQUIRED JENKINS PLUGINS:
+// - Kubernetes Plugin (kubernetes)
+// - Kubernetes CLI Plugin (kubernetes-cli)
+// - Credentials Plugin (credentials)
+// - Email Extension Plugin (email-ext)
+//
+// ADDITIONAL SETUP:
+// - Install kubectl on Jenkins agent (version should match your cluster)
+// - Add kubeconfig file as Jenkins secret file credential (ID: 'kubeconfig-file')
+// - Create Kubernetes manifest files in your repository
+// - Configure contexts in kubeconfig for different environments (dev, staging, production)
+// - Ensure proper RBAC permissions in Kubernetes clusters
+// - Configure email settings in Jenkins
+//
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_REGISTRY = 'docker.io'
+        IMAGE_NAME = 'myapp'
+        KUBECTL_VERSION = '1.28.0'
+        KUBECONFIG_CREDENTIALS = credentials('kubeconfig-file')
+    }
+    
+    parameters {
+        choice(name: 'CLUSTER', choices: ['dev', 'staging', 'production'], description: 'Target Kubernetes cluster')
+        choice(name: 'NAMESPACE', choices: ['default', 'app', 'backend', 'frontend'], description: 'Kubernetes namespace')
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker image tag to deploy')
+        choice(name: 'DEPLOYMENT_TYPE', choices: ['deployment', 'statefulset', 'daemonset'], description: 'Kubernetes resource type')
+        booleanParam(name: 'DRY_RUN', defaultValue: false, description: 'Run kubectl apply with --dry-run')
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out Kubernetes manifests...'
+                // git url: 'https://github.com/your-org/k8s-manifests.git', branch: 'main'
+            }
+        }
+        
+        stage('Setup kubectl') {
+            steps {
+                echo 'Setting up kubectl...'
+                sh """
+                    kubectl version --client
+                    kubectl config view
+                """
+            }
+        }
+        
+        stage('Validate Manifests') {
+            steps {
+                echo 'Validating Kubernetes manifests...'
+                sh """
+                    # Validate YAML syntax
+                    find k8s/${params.CLUSTER}/${params.NAMESPACE} -name '*.yaml' -o -name '*.yml' | while read file; do
+                        echo "Validating \$file"
+                        kubectl apply --dry-run=client -f \$file
+                    done
+                """
+                echo 'Manifest validation completed'
+            }
+        }
+        
+        stage('Set Kubernetes Context') {
+            steps {
+                echo "Setting Kubernetes context for ${params.CLUSTER}..."
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        kubectl config use-context ${params.CLUSTER}
+                        kubectl config current-context
+                    """
+                }
+            }
+        }
+        
+        stage('Create/Update ConfigMaps') {
+            steps {
+                echo 'Creating or updating ConfigMaps...'
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        if [ -f k8s/${params.CLUSTER}/${params.NAMESPACE}/configmap.yaml ]; then
+                            kubectl apply -f k8s/${params.CLUSTER}/${params.NAMESPACE}/configmap.yaml -n ${params.NAMESPACE}
+                        fi
+                    """
+                }
+            }
+        }
+        
+        stage('Create/Update Secrets') {
+            steps {
+                echo 'Creating or updating Secrets...'
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        if [ -f k8s/${params.CLUSTER}/${params.NAMESPACE}/secret.yaml ]; then
+                            kubectl apply -f k8s/${params.CLUSTER}/${params.NAMESPACE}/secret.yaml -n ${params.NAMESPACE}
+                        fi
+                    """
+                }
+            }
+        }
+        
+        stage('Update Image Tag') {
+            steps {
+                echo "Updating image tag to ${params.IMAGE_TAG}..."
+                sh """
+                    # Update image tag in deployment manifest
+                    sed -i 's|image: ${DOCKER_REGISTRY}/${IMAGE_NAME}:.*|image: ${DOCKER_REGISTRY}/${IMAGE_NAME}:${params.IMAGE_TAG}|g' \\
+                        k8s/${params.CLUSTER}/${params.NAMESPACE}/deployment.yaml
+                    
+                    # Verify the change
+                    grep "image:" k8s/${params.CLUSTER}/${params.NAMESPACE}/deployment.yaml
+                """
+            }
+        }
+        
+        stage('Deploy to Kubernetes (Dry Run)') {
+            when {
+                expression { params.DRY_RUN == true }
+            }
+            steps {
+                echo 'Running deployment in dry-run mode...'
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        kubectl apply -f k8s/${params.CLUSTER}/${params.NAMESPACE}/ \\
+                            -n ${params.NAMESPACE} \\
+                            --dry-run=server \\
+                            --validate=true
+                    """
+                }
+            }
+        }
+        
+        stage('Deploy to Kubernetes') {
+            when {
+                expression { params.DRY_RUN == false }
+            }
+            steps {
+                echo "Deploying to ${params.CLUSTER} cluster, namespace: ${params.NAMESPACE}..."
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        
+                        # Apply all manifests
+                        kubectl apply -f k8s/${params.CLUSTER}/${params.NAMESPACE}/ -n ${params.NAMESPACE}
+                        
+                        # Show deployment status
+                        kubectl rollout status ${params.DEPLOYMENT_TYPE}/myapp -n ${params.NAMESPACE} --timeout=5m
+                    """
+                }
+                echo 'Deployment completed successfully'
+            }
+        }
+        
+        stage('Verify Deployment') {
+            when {
+                expression { params.DRY_RUN == false }
+            }
+            steps {
+                echo 'Verifying deployment...'
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        
+                        # Check pod status
+                        echo "=== Pods ==="
+                        kubectl get pods -n ${params.NAMESPACE} -l app=myapp
+                        
+                        # Check deployment details
+                        echo "=== Deployment ==="
+                        kubectl get ${params.DEPLOYMENT_TYPE} -n ${params.NAMESPACE}
+                        
+                        # Check services
+                        echo "=== Services ==="
+                        kubectl get svc -n ${params.NAMESPACE}
+                        
+                        # Check recent events
+                        echo "=== Recent Events ==="
+                        kubectl get events -n ${params.NAMESPACE} --sort-by='.lastTimestamp' | tail -20
+                        
+                        # Describe deployment
+                        kubectl describe ${params.DEPLOYMENT_TYPE}/myapp -n ${params.NAMESPACE}
+                    """
+                }
+                echo 'Verification completed'
+            }
+        }
+        
+        stage('Health Check') {
+            when {
+                expression { params.DRY_RUN == false }
+            }
+            steps {
+                echo 'Running health checks...'
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        
+                        # Wait for all pods to be ready
+                        kubectl wait --for=condition=ready pod -l app=myapp -n ${params.NAMESPACE} --timeout=300s
+                        
+                        # Check if all replicas are ready
+                        DESIRED=\$(kubectl get ${params.DEPLOYMENT_TYPE} myapp -n ${params.NAMESPACE} -o jsonpath='{.spec.replicas}')
+                        READY=\$(kubectl get ${params.DEPLOYMENT_TYPE} myapp -n ${params.NAMESPACE} -o jsonpath='{.status.readyReplicas}')
+                        
+                        echo "Desired replicas: \$DESIRED"
+                        echo "Ready replicas: \$READY"
+                        
+                        if [ "\$DESIRED" != "\$READY" ]; then
+                            echo "Not all replicas are ready!"
+                            exit 1
+                        fi
+                        
+                        echo "All pods are healthy and ready!"
+                    """
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "Kubernetes deployment to ${params.CLUSTER} completed successfully!"
+            mail(
+                to: 'devops-team@example.com',
+                subject: "SUCCESS: K8s Deployment to ${params.CLUSTER}",
+                body: """
+                    Deployment Details:
+                    - Cluster: ${params.CLUSTER}
+                    - Namespace: ${params.NAMESPACE}
+                    - Image Tag: ${params.IMAGE_TAG}
+                    - Deployment Type: ${params.DEPLOYMENT_TYPE}
+                    - Build URL: ${env.BUILD_URL}
+                """
+            )
+        }
+        
+        failure {
+            echo "Kubernetes deployment failed!"
+            withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                sh """
+                    export KUBECONFIG=\${KUBECONFIG}
+                    echo "=== Failed Deployment Logs ==="
+                    kubectl logs -l app=myapp -n ${params.NAMESPACE} --tail=50 || true
+                """
+            }
+            mail(
+                to: 'devops-team@example.com',
+                subject: "FAILED: K8s Deployment to ${params.CLUSTER}",
+                body: """
+                    Deployment Failed!
+                    - Cluster: ${params.CLUSTER}
+                    - Namespace: ${params.NAMESPACE}
+                    - Check logs: ${env.BUILD_URL}console
+                """
+            )
+        }
+        
+        always {
+            echo 'Pipeline completed'
+        }
+    }
+}

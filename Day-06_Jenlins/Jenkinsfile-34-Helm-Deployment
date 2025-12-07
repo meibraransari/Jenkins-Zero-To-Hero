@@ -1,0 +1,217 @@
+// Helm Chart Deployment to Kubernetes
+// Demonstrates deploying applications using Helm charts
+//
+// REQUIRED JENKINS PLUGINS:
+// - Kubernetes Plugin (kubernetes)
+// - Kubernetes CLI Plugin (kubernetes-cli)
+// - Credentials Plugin (credentials)
+//
+// ADDITIONAL SETUP:
+// - Install Helm on Jenkins agent (version 3.x recommended)
+// - Install kubectl on Jenkins agent
+// - Add kubeconfig file as Jenkins secret file credential (ID: 'kubeconfig-file')
+// - Configure Helm repositories
+// - Create Helm charts in your repository
+//
+pipeline {
+    agent any
+    
+    environment {
+        HELM_VERSION = '3.12.0'
+        CHART_PATH = './helm-charts/myapp'
+        KUBECONFIG_CREDENTIALS = credentials('kubeconfig-file')
+    }
+    
+    parameters {
+        choice(name: 'CLUSTER', choices: ['dev', 'staging', 'production'], description: 'Target Kubernetes cluster')
+        choice(name: 'NAMESPACE', choices: ['default', 'app', 'backend'], description: 'Kubernetes namespace')
+        string(name: 'RELEASE_NAME', defaultValue: 'myapp', description: 'Helm release name')
+        string(name: 'CHART_VERSION', defaultValue: '1.0.0', description: 'Chart version to deploy')
+        choice(name: 'ACTION', choices: ['install', 'upgrade', 'rollback', 'uninstall'], description: 'Helm action')
+        string(name: 'ROLLBACK_REVISION', defaultValue: '0', description: 'Revision to rollback to (0 = previous)')
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out Helm charts...'
+                // git url: 'https://github.com/your-org/helm-charts.git', branch: 'main'
+            }
+        }
+        
+        stage('Setup Helm') {
+            steps {
+                echo 'Setting up Helm and kubectl...'
+                sh """
+                    helm version
+                    kubectl version --client
+                """
+            }
+        }
+        
+        stage('Lint Helm Chart') {
+            steps {
+                echo 'Linting Helm chart...'
+                sh """
+                    helm lint ${CHART_PATH}
+                """
+            }
+        }
+        
+        stage('Set Kubernetes Context') {
+            steps {
+                echo "Setting Kubernetes context for ${params.CLUSTER}..."
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        kubectl config use-context ${params.CLUSTER}
+                        kubectl config current-context
+                    """
+                }
+            }
+        }
+        
+        stage('Add Helm Repositories') {
+            steps {
+                echo 'Adding Helm repositories...'
+                sh """
+                    # Add custom repositories if needed
+                    # helm repo add bitnami https://charts.bitnami.com/bitnami
+                    helm repo update
+                """
+            }
+        }
+        
+        stage('Dry Run') {
+            steps {
+                echo 'Running Helm install/upgrade in dry-run mode...'
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        helm upgrade --install ${params.RELEASE_NAME} ${CHART_PATH} \
+                            --namespace ${params.NAMESPACE} \
+                            --create-namespace \
+                            --values ${CHART_PATH}/values-${params.CLUSTER}.yaml \
+                            --set image.tag=${params.CHART_VERSION} \
+                            --dry-run \
+                            --debug
+                    """
+                }
+            }
+        }
+        
+        stage('Helm Install/Upgrade') {
+            when {
+                expression { params.ACTION == 'install' || params.ACTION == 'upgrade' }
+            }
+            steps {
+                echo "Deploying ${params.RELEASE_NAME} to ${params.CLUSTER}..."
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        helm upgrade --install ${params.RELEASE_NAME} ${CHART_PATH} \
+                            --namespace ${params.NAMESPACE} \
+                            --create-namespace \
+                            --values ${CHART_PATH}/values-${params.CLUSTER}.yaml \
+                            --set image.tag=${params.CHART_VERSION} \
+                            --wait \
+                            --timeout 5m \
+                            --atomic
+                    """
+                }
+            }
+        }
+        
+        stage('Helm Rollback') {
+            when {
+                expression { params.ACTION == 'rollback' }
+            }
+            steps {
+                echo "Rolling back ${params.RELEASE_NAME}..."
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        helm rollback ${params.RELEASE_NAME} ${params.ROLLBACK_REVISION} \
+                            --namespace ${params.NAMESPACE} \
+                            --wait
+                    """
+                }
+            }
+        }
+        
+        stage('Helm Uninstall') {
+            when {
+                expression { params.ACTION == 'uninstall' }
+            }
+            steps {
+                input message: "Are you sure you want to uninstall ${params.RELEASE_NAME}?", ok: 'Uninstall'
+                echo "Uninstalling ${params.RELEASE_NAME}..."
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        helm uninstall ${params.RELEASE_NAME} \
+                            --namespace ${params.NAMESPACE}
+                    """
+                }
+            }
+        }
+        
+        stage('Verify Deployment') {
+            when {
+                expression { params.ACTION == 'install' || params.ACTION == 'upgrade' }
+            }
+            steps {
+                echo 'Verifying Helm deployment...'
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh """
+                        export KUBECONFIG=\${KUBECONFIG}
+                        
+                        # Check Helm release status
+                        helm status ${params.RELEASE_NAME} -n ${params.NAMESPACE}
+                        
+                        # Check Helm history
+                        helm history ${params.RELEASE_NAME} -n ${params.NAMESPACE}
+                        
+                        # Check pods
+                        kubectl get pods -n ${params.NAMESPACE} -l app.kubernetes.io/instance=${params.RELEASE_NAME}
+                        
+                        # Check services
+                        kubectl get svc -n ${params.NAMESPACE} -l app.kubernetes.io/instance=${params.RELEASE_NAME}
+                    """
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "Helm ${params.ACTION} completed successfully!"
+            mail(
+                to: 'devops-team@example.com',
+                subject: "SUCCESS: Helm ${params.ACTION} - ${params.RELEASE_NAME}",
+                body: """
+                    Helm Action: ${params.ACTION}
+                    Release: ${params.RELEASE_NAME}
+                    Namespace: ${params.NAMESPACE}
+                    Cluster: ${params.CLUSTER}
+                    Chart Version: ${params.CHART_VERSION}
+                    Build URL: ${env.BUILD_URL}
+                """
+            )
+        }
+        
+        failure {
+            echo "Helm ${params.ACTION} failed!"
+            mail(
+                to: 'devops-team@example.com',
+                subject: "FAILED: Helm ${params.ACTION} - ${params.RELEASE_NAME}",
+                body: """
+                    Helm ${params.ACTION} failed!
+                    Release: ${params.RELEASE_NAME}
+                    Cluster: ${params.CLUSTER}
+                    Check logs: ${env.BUILD_URL}console
+                """
+            )
+        }
+    }
+}

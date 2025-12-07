@@ -1,0 +1,81 @@
+// Docker Build, Push and SSH Deploy
+// Demonstrates complete Docker workflow: build, push to registry, and deploy via SSH
+//
+// REQUIRED JENKINS PLUGINS:
+// - Docker Pipeline Plugin (docker-workflow)
+// - Docker Plugin (docker-plugin)
+// - SSH Agent Plugin (ssh-agent)
+// - Credentials Plugin (credentials)
+//
+// ADDITIONAL SETUP:
+// - Configure Docker registry credentials in Jenkins
+// - Add SSH credentials for production server (ID: 1f3a5f4b-11ad-48df-acf5-76276c3db78b)
+// - Add Docker host credentials (ID: 1967c78f-1a35-46d8-902c-e597101aed72)
+// - Ensure Docker is installed on both Jenkins agent and production server
+//
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_HOST_CREDENTIALS = credentials('1967c78f-1a35-46d8-902c-e597101aed72')
+        DOCKER_HOST = 'hub.devopsinaction.lab'
+        DOCKER_IMAGE = "${DOCKER_HOST}/prod-web:latest"
+        PROD_SERVER = '192.168.1.205'
+        PROD_USER = 'user'
+        PROD_SSH_KEY = credentials('1f3a5f4b-11ad-48df-acf5-76276c3db78b')
+        CONTAINER_NAME = 'prod-web'
+        IMAGE_NAME = 'i-prod-web'
+    }
+    
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t ${DOCKER_IMAGE} ."
+                echo 'Docker image built successfully'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                sh "docker push ${DOCKER_IMAGE}"
+                echo 'Docker image pushed to registry'
+            }
+        }
+        
+        stage('Deploy Docker Container to Production') {
+            steps {
+                script {
+                    // SSH into the production server
+                    sshagent(['1f3a5f4b-11ad-48df-acf5-76276c3db78b']) {
+                        // Make the default ssh agent (the one configured above) accessible in the build
+                        //sh 'ssh -o StrictHostKeyChecking=no $PROD_USER@$PROD_SERVER uptime'
+                        //sh 'scp -r -o StrictHostKeyChecking=no $WORKSPACE/cabinet_env $PROD_SERVER_USER@$PROD_SERVER_IP:/tmp'
+                        sh """
+                        #!/bin/bash
+                        ssh -o StrictHostKeyChecking=no $PROD_USER@$PROD_SERVER <<EOF
+                        hostname
+                        docker ps -a
+                        docker pull ${DOCKER_IMAGE}
+                        docker stop ${CONTAINER_NAME} || true
+                        docker rm ${CONTAINER_NAME} || true
+                        docker run -d --name ${CONTAINER_NAME} ${DOCKER_IMAGE}
+                        docker ps
+EOF
+                        """
+                        echo 'Deployed to production successfully'
+                        //sh 'scp ./source/filename user@hostname.com:/remotehost/target'
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Docker build, push, and deployment completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed! Check the logs.'
+        }
+    }
+}

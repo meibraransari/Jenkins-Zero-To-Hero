@@ -1,0 +1,33 @@
+// Trigger Multiple Dependent Jobs
+// Demonstrates triggering multiple dependent jobs sequentially
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building main application...'
+            }
+        }
+        
+        stage('Trigger Dependent Jobs') {
+            steps {
+                build job: 'Backend-Build', 
+                      wait: true,
+                      propagate: true
+                echo 'Backend build completed'
+                
+                build job: 'Frontend-Build', 
+                      wait: true,
+                      propagate: true
+                echo 'Frontend build completed'
+            }
+        }
+        
+        stage('Integration Test') {
+            steps {
+                echo 'Running integration tests after all builds complete...'
+            }
+        }
+    }
+}

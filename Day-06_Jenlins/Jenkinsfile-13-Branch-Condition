@@ -1,0 +1,29 @@
+// Deploy with Branch Condition
+// Demonstrates conditional deployment using 'when' directive
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+        
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo "Deploying only on main branch"
+                echo "Current branch: ${env.BRANCH_NAME}"
+            }
+        }
+    }
+}

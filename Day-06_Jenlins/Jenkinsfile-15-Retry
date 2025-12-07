@@ -1,0 +1,31 @@
+// Retry Mechanism
+// Demonstrates retry mechanism for flaky operations
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+            }
+        }
+        
+        stage('Flaky Step') {
+            steps {
+                retry(3) {
+                    sh "curl http://unstable-service/ping"
+                    echo 'Service pinged successfully'
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                retry(2) {
+                    echo 'Attempting deployment...'
+                    // Add deployment logic here
+                }
+            }
+        }
+    }
+}

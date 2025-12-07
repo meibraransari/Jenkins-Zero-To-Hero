@@ -1,0 +1,32 @@
+// Using Multiple Containers
+// Demonstrates using different Docker containers in different stages
+//
+// REQUIRED JENKINS PLUGINS:
+// - Docker Pipeline Plugin (docker-workflow)
+// - Docker Plugin (docker-plugin)
+//
+pipeline {
+    agent none
+    
+    stages {
+        stage('Back-end') {
+            agent {
+                docker { image 'node:18' }
+            }
+            steps {
+                sh 'node --version'
+                echo 'Building backend with Node.js 18'
+            }
+        }
+        
+        stage('Front-end') {
+            agent {
+                docker { image 'node:20' }
+            }
+            steps {
+                sh 'node --version'
+                echo 'Building frontend with Node.js 20'
+            }
+        }
+    }
+}

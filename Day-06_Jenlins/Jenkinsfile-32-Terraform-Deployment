@@ -1,0 +1,183 @@
+// Terraform Infrastructure Deployment
+// Demonstrates deploying infrastructure using Terraform
+//
+// REQUIRED JENKINS PLUGINS:
+// - Terraform Plugin (terraform)
+// - Credentials Plugin (credentials)
+// - Email Extension Plugin (email-ext)
+//
+// ADDITIONAL SETUP:
+// - Install Terraform on Jenkins agent
+// - Configure cloud provider credentials (AWS/Azure/GCP)
+// - Set up backend for Terraform state (S3, Azure Storage, etc.)
+// - Add cloud credentials in Jenkins (ID: 'cloud-credentials')
+//
+pipeline {
+    agent any
+    
+    environment {
+        TF_VERSION = '1.6.0'
+        TF_WORKSPACE = 'default'
+        AWS_CREDENTIALS = credentials('aws-credentials')
+    }
+    
+    parameters {
+        choice(name: 'ACTION', choices: ['plan', 'apply', 'destroy'], description: 'Terraform action to perform')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'production'], description: 'Target environment')
+        booleanParam(name: 'AUTO_APPROVE', defaultValue: false, description: 'Auto-approve terraform apply/destroy')
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out Terraform configurations...'
+                // git url: 'https://github.com/your-org/terraform-infra.git', branch: 'main'
+            }
+        }
+        
+        stage('Terraform Init') {
+            steps {
+                echo "Initializing Terraform for ${params.ENVIRONMENT}..."
+                dir("terraform/${params.ENVIRONMENT}") {
+                    sh """
+                        terraform --version
+                        terraform init -backend-config="key=${params.ENVIRONMENT}/terraform.tfstate"
+                    """
+                }
+            }
+        }
+        
+        stage('Terraform Validate') {
+            steps {
+                echo 'Validating Terraform configurations...'
+                dir("terraform/${params.ENVIRONMENT}") {
+                    sh 'terraform validate'
+                }
+            }
+        }
+        
+        stage('Terraform Format Check') {
+            steps {
+                echo 'Checking Terraform formatting...'
+                dir("terraform/${params.ENVIRONMENT}") {
+                    sh 'terraform fmt -check -recursive || true'
+                }
+            }
+        }
+        
+        stage('Terraform Plan') {
+            steps {
+                echo "Running Terraform plan for ${params.ENVIRONMENT}..."
+                dir("terraform/${params.ENVIRONMENT}") {
+                    sh """
+                        terraform plan \
+                            -var-file="${params.ENVIRONMENT}.tfvars" \
+                            -out=tfplan \
+                            -lock=true
+                    """
+                }
+            }
+        }
+        
+        stage('Terraform Apply') {
+            when {
+                expression { params.ACTION == 'apply' }
+            }
+            steps {
+                script {
+                    if (params.AUTO_APPROVE) {
+                        echo "Auto-approving Terraform apply for ${params.ENVIRONMENT}..."
+                        dir("terraform/${params.ENVIRONMENT}") {
+                            sh 'terraform apply -auto-approve tfplan'
+                        }
+                    } else {
+                        echo "Manual approval required for ${params.ENVIRONMENT}..."
+                        input message: "Review the plan and approve to apply changes to ${params.ENVIRONMENT}", ok: 'Apply'
+                        dir("terraform/${params.ENVIRONMENT}") {
+                            sh 'terraform apply tfplan'
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Terraform Destroy') {
+            when {
+                expression { params.ACTION == 'destroy' }
+            }
+            steps {
+                script {
+                    if (params.AUTO_APPROVE) {
+                        echo "Auto-approving Terraform destroy for ${params.ENVIRONMENT}..."
+                        dir("terraform/${params.ENVIRONMENT}") {
+                            sh """
+                                terraform destroy \
+                                    -var-file="${params.ENVIRONMENT}.tfvars" \
+                                    -auto-approve
+                            """
+                        }
+                    } else {
+                        echo "Manual approval required to destroy ${params.ENVIRONMENT}..."
+                        input message: "Are you sure you want to DESTROY ${params.ENVIRONMENT} infrastructure?", ok: 'Destroy'
+                        dir("terraform/${params.ENVIRONMENT}") {
+                            sh """
+                                terraform destroy \
+                                    -var-file="${params.ENVIRONMENT}.tfvars" \
+                                    -auto-approve
+                            """
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Terraform Output') {
+            when {
+                expression { params.ACTION == 'apply' }
+            }
+            steps {
+                echo 'Getting Terraform outputs...'
+                dir("terraform/${params.ENVIRONMENT}") {
+                    sh 'terraform output -json > outputs.json'
+                    sh 'cat outputs.json'
+                    archiveArtifacts artifacts: 'outputs.json', fingerprint: true
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "Terraform ${params.ACTION} completed successfully for ${params.ENVIRONMENT}!"
+            mail(
+                to: 'devops-team@example.com',
+                subject: "SUCCESS: Terraform ${params.ACTION} - ${params.ENVIRONMENT}",
+                body: """
+                    Terraform Action: ${params.ACTION}
+                    Environment: ${params.ENVIRONMENT}
+                    Build URL: ${env.BUILD_URL}
+                """
+            )
+        }
+        
+        failure {
+            echo "Terraform ${params.ACTION} failed!"
+            mail(
+                to: 'devops-team@example.com',
+                subject: "FAILED: Terraform ${params.ACTION} - ${params.ENVIRONMENT}",
+                body: """
+                    Terraform ${params.ACTION} failed!
+                    Environment: ${params.ENVIRONMENT}
+                    Check logs: ${env.BUILD_URL}console
+                """
+            )
+        }
+        
+        always {
+            echo 'Cleaning up...'
+            dir("terraform/${params.ENVIRONMENT}") {
+                sh 'rm -f tfplan'
+            }
+        }
+    }
+}

@@ -1,0 +1,31 @@
+// Pipeline with Timestamps and Docker Agent
+// Demonstrates timestamps option and Docker container as agent
+//
+// REQUIRED JENKINS PLUGINS:
+// - Docker Pipeline Plugin (docker-workflow)
+// - Docker Plugin (docker-plugin)
+//
+pipeline {
+    agent {
+        docker { image 'node:18' }
+    }
+    
+    options { 
+        timestamps() 
+    }
+    
+    stages {
+        stage('Verify Node') {
+            steps {
+                sh 'node --version'
+                sh 'npm --version'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                echo 'Building with Node.js in Docker container...'
+            }
+        }
+    }
+}

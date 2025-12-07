@@ -1,0 +1,25 @@
+// Archive Artifacts
+// Demonstrates archiving build artifacts
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+                sh 'mkdir -p build'
+                sh 'echo "build output" > build/output.txt'
+                sh 'echo "application binary" > build/app.jar'
+            }
+        }
+        
+        stage('Archive') {
+            steps {
+                archiveArtifacts artifacts: 'build/*.txt, build/*.jar', 
+                                 fingerprint: true,
+                                 allowEmptyArchive: false
+                echo 'Artifacts archived successfully'
+            }
+        }
+    }
+}

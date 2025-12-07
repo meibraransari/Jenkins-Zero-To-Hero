@@ -1,0 +1,154 @@
+// SonarQube Code Quality Analysis
+// Demonstrates code quality scanning and analysis with SonarQube
+//
+// REQUIRED JENKINS PLUGINS:
+// - SonarQube Scanner Plugin (sonar)
+// - Credentials Plugin (credentials)
+//
+// ADDITIONAL SETUP:
+// - Install and configure SonarQube server
+// - Add SonarQube server in Jenkins (Manage Jenkins > Configure System > SonarQube servers)
+// - Add SonarQube token as Jenkins secret text credential (ID: 'sonarqube-token')
+// - Install SonarQube Scanner on Jenkins agent or use Docker
+// - Configure Quality Gates in SonarQube (optional)
+//
+pipeline {
+    agent any
+    
+    environment {
+        SONAR_HOST_URL = 'http://sonarqube.example.com:9000'
+        SONAR_TOKEN = credentials('sonarqube-token')
+        PROJECT_KEY = 'my-project'
+        PROJECT_NAME = 'My Project'
+    }
+    
+    parameters {
+        choice(name: 'BRANCH', choices: ['main', 'develop', 'feature'], description: 'Branch to analyze')
+        booleanParam(name: 'QUALITY_GATE', defaultValue: true, description: 'Wait for Quality Gate result')
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code...'
+                // git url: 'https://github.com/your-org/project.git', branch: params.BRANCH
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                echo 'Building the project...'
+                sh '''
+                    # Example for Maven project
+                    # mvn clean package -DskipTests
+                    
+                    # Example for Node.js project
+                    # npm install
+                    # npm run build
+                    
+                    echo "Build completed"
+                '''
+            }
+        }
+        
+        stage('Unit Tests') {
+            steps {
+                echo 'Running unit tests...'
+                sh '''
+                    # Example for Maven project
+                    # mvn test
+                    
+                    # Example for Node.js project
+                    # npm test -- --coverage
+                    
+                    echo "Tests completed"
+                '''
+            }
+        }
+        
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Running SonarQube analysis...'
+                withSonarQubeEnv('SonarQube') {
+                    sh """
+                        sonar-scanner \
+                            -Dsonar.projectKey=${PROJECT_KEY} \
+                            -Dsonar.projectName='${PROJECT_NAME}' \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=${SONAR_HOST_URL} \
+                            -Dsonar.login=${SONAR_TOKEN} \
+                            -Dsonar.branch.name=${params.BRANCH}
+                    """
+                }
+                
+                // Alternative for Maven projects:
+                // sh 'mvn sonar:sonar -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}'
+                
+                // Alternative for Node.js/JavaScript projects:
+                // sh 'npm run sonar'
+            }
+        }
+        
+        stage('Quality Gate') {
+            when {
+                expression { params.QUALITY_GATE == true }
+            }
+            steps {
+                echo 'Waiting for Quality Gate result...'
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        
+        stage('Generate Report') {
+            steps {
+                echo 'Generating SonarQube report...'
+                sh """
+                    echo "SonarQube Analysis Complete!"
+                    echo "View report at: ${SONAR_HOST_URL}/dashboard?id=${PROJECT_KEY}"
+                """
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'SonarQube analysis completed successfully!'
+            mail(
+                to: 'dev-team@example.com',
+                subject: "SUCCESS: SonarQube Analysis - ${PROJECT_NAME}",
+                body: """
+                    SonarQube analysis passed successfully!
+                    
+                    Project: ${PROJECT_NAME}
+                    Branch: ${params.BRANCH}
+                    
+                    View report: ${SONAR_HOST_URL}/dashboard?id=${PROJECT_KEY}
+                    Build URL: ${env.BUILD_URL}
+                """
+            )
+        }
+        
+        failure {
+            echo 'SonarQube analysis failed or Quality Gate not passed!'
+            mail(
+                to: 'dev-team@example.com',
+                subject: "FAILED: SonarQube Analysis - ${PROJECT_NAME}",
+                body: """
+                    SonarQube analysis failed or did not meet Quality Gate criteria!
+                    
+                    Project: ${PROJECT_NAME}
+                    Branch: ${params.BRANCH}
+                    
+                    View report: ${SONAR_HOST_URL}/dashboard?id=${PROJECT_KEY}
+                    Check logs: ${env.BUILD_URL}console
+                """
+            )
+        }
+        
+        always {
+            echo 'SonarQube analysis stage completed'
+        }
+    }
+}

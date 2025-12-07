@@ -1,0 +1,162 @@
+// Ansible Deployment Pipeline
+// Demonstrates deploying applications using Ansible playbooks
+//
+// REQUIRED JENKINS PLUGINS:
+// - Ansible Plugin (ansible)
+// - SSH Agent Plugin (ssh-agent)
+// - Credentials Plugin (credentials)
+// - Email Extension Plugin (email-ext)
+//
+// ADDITIONAL SETUP:
+// - Install Ansible on Jenkins agent
+// - Install ansible-lint on Jenkins agent (optional but recommended)
+// - Add SSH credentials for Ansible (ID: 'ansible-ssh-key')
+// - Create Ansible inventory files for each environment (dev, staging, production)
+// - Ensure Ansible playbooks are in repository or workspace
+// - Configure email settings in Jenkins
+//
+pipeline {
+    agent any
+    
+    environment {
+        ANSIBLE_HOST_KEY_CHECKING = 'False'
+        ANSIBLE_INVENTORY = 'inventory/production.ini'
+        ANSIBLE_PLAYBOOK = 'deploy.yml'
+        SSH_CREDENTIALS = credentials('ansible-ssh-key')
+    }
+    
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'production'], description: 'Target environment')
+        choice(name: 'PLAYBOOK', choices: ['deploy.yml', 'rollback.yml', 'configure.yml'], description: 'Ansible playbook to run')
+        string(name: 'EXTRA_VARS', defaultValue: '', description: 'Extra variables (e.g., version=1.2.3)')
+        booleanParam(name: 'CHECK_MODE', defaultValue: false, description: 'Run in check mode (dry-run)')
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out Ansible playbooks...'
+                // git url: 'https://github.com/your-org/ansible-playbooks.git', branch: 'main'
+            }
+        }
+        
+        stage('Validate Ansible Syntax') {
+            steps {
+                echo "Validating Ansible playbook syntax..."
+                sh """
+                    ansible-playbook ${params.PLAYBOOK} --syntax-check
+                """
+                echo 'Syntax validation passed'
+            }
+        }
+        
+        stage('Ansible Lint') {
+            steps {
+                echo 'Running ansible-lint...'
+                sh """
+                    ansible-lint ${params.PLAYBOOK} || true
+                """
+            }
+        }
+        
+        stage('Check Inventory') {
+            steps {
+                echo "Checking inventory for ${params.ENVIRONMENT}..."
+                sh """
+                    ansible-inventory -i inventory/${params.ENVIRONMENT}.ini --list
+                """
+            }
+        }
+        
+        stage('Dry Run (Check Mode)') {
+            when {
+                expression { params.CHECK_MODE == true }
+            }
+            steps {
+                echo 'Running Ansible in check mode (dry-run)...'
+                sshagent(['ansible-ssh-key']) {
+                    sh """
+                        ansible-playbook ${params.PLAYBOOK} \\
+                            -i inventory/${params.ENVIRONMENT}.ini \\
+                            --check \\
+                            --diff \\
+                            ${params.EXTRA_VARS ? "-e '${params.EXTRA_VARS}'" : ''}
+                    """
+                }
+            }
+        }
+        
+        stage('Deploy with Ansible') {
+            when {
+                expression { params.CHECK_MODE == false }
+            }
+            steps {
+                echo "Deploying to ${params.ENVIRONMENT} using ${params.PLAYBOOK}..."
+                sshagent(['ansible-ssh-key']) {
+                    sh """
+                        ansible-playbook ${params.PLAYBOOK} \\
+                            -i inventory/${params.ENVIRONMENT}.ini \\
+                            -e "environment=${params.ENVIRONMENT}" \\
+                            ${params.EXTRA_VARS ? "-e '${params.EXTRA_VARS}'" : ''} \\
+                            --verbose
+                    """
+                }
+                echo 'Deployment completed successfully'
+            }
+        }
+        
+        stage('Verify Deployment') {
+            when {
+                expression { params.CHECK_MODE == false }
+            }
+            steps {
+                echo 'Verifying deployment...'
+                sshagent(['ansible-ssh-key']) {
+                    sh """
+                        ansible ${params.ENVIRONMENT} \\
+                            -i inventory/${params.ENVIRONMENT}.ini \\
+                            -m shell \\
+                            -a 'systemctl status myapp || docker ps | grep myapp'
+                    """
+                }
+                echo 'Verification completed'
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "Ansible deployment to ${params.ENVIRONMENT} completed successfully!"
+            mail(
+                to: 'devops-team@example.com',
+                subject: "SUCCESS: Ansible Deployment to ${params.ENVIRONMENT}",
+                body: """
+                    Deployment Details:
+                    - Environment: ${params.ENVIRONMENT}
+                    - Playbook: ${params.PLAYBOOK}
+                    - Extra Variables: ${params.EXTRA_VARS}
+                    - Build URL: ${env.BUILD_URL}
+                """
+            )
+        }
+        
+        failure {
+            echo "Ansible deployment failed!"
+            mail(
+                to: 'devops-team@example.com',
+                subject: "FAILED: Ansible Deployment to ${params.ENVIRONMENT}",
+                body: """
+                    Deployment Failed!
+                    - Environment: ${params.ENVIRONMENT}
+                    - Playbook: ${params.PLAYBOOK}
+                    - Check logs: ${env.BUILD_URL}console
+                """
+            )
+        }
+        
+        always {
+            echo 'Cleaning up...'
+            cleanWs()
+        }
+    }
+}

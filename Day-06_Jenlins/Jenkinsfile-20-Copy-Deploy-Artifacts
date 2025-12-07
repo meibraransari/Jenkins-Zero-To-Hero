@@ -1,0 +1,40 @@
+// Copy and Deploy Artifacts
+// Demonstrates copying artifacts and deploying them
+//
+// REQUIRED JENKINS PLUGINS:
+// - Copy Artifact Plugin (copyartifact)
+//
+// ADDITIONAL SETUP:
+// - Ensure source job 'Build-Job' exists and archives artifacts
+// - Configure permissions for copying artifacts between jobs
+//
+pipeline {
+    agent any
+    
+    stages {
+        stage('Copy Artifact') {
+            steps {
+                copyArtifacts(
+                    projectName: 'Build-Job',
+                    selector: lastSuccessful(),
+                    target: 'artifacts/'
+                )
+                echo 'Artifacts copied from Build-Job'
+            }
+        }
+        
+        stage('Verify Artifacts') {
+            steps {
+                sh 'ls -la artifacts/'
+                echo 'Verifying artifacts...'
+            }
+        }
+        
+        stage('Deploy Artifact') {
+            steps { 
+                sh 'cp artifacts/* /deploy/path/'
+                echo 'Artifacts deployed to /deploy/path/'
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+// Parallel Tests Execution
+// Demonstrates running tests in parallel
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+            }
+        }
+        
+        stage('Parallel Tests') {
+            parallel {
+                stage('Unit Tests') {
+                    steps { 
+                        echo 'Running Unit Tests'
+                        // Add your unit test commands here
+                    }
+                }
+                stage('Integration Tests') {
+                    steps { 
+                        echo 'Running Integration Tests'
+                        // Add your integration test commands here
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+            }
+        }
+    }
+}

@@ -1,0 +1,178 @@
+// Cron/Scheduled Build Pipeline
+// Demonstrates scheduled builds using cron expressions
+//
+// REQUIRED JENKINS PLUGINS:
+// - None (uses built-in Jenkins features)
+//
+// CRON SYNTAX:
+// MINUTE HOUR DAY MONTH DAYOFWEEK
+// * * * * * (every minute)
+// H/15 * * * * (every 15 minutes)
+// H 2 * * * (daily at 2 AM)
+// H 2 * * 1-5 (weekdays at 2 AM)
+// H 0 * * 0 (Sundays at midnight)
+//
+pipeline {
+    agent any
+    
+    triggers {
+        // Daily build at 2 AM (with hash for load distribution)
+        cron('H 2 * * *')
+        
+        // Uncomment for different schedules:
+        // cron('H */4 * * *')           // Every 4 hours
+        // cron('H 2 * * 1-5')           // Weekdays at 2 AM
+        // cron('H 0 * * 0')             // Sundays at midnight
+        // cron('H H(0-7) * * *')        // Once between midnight and 7 AM
+        // cron('H H * * 0')             // Once on Sundays
+    }
+    
+    options {
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr: '30', daysToKeepStr: '90'))
+        disableConcurrentBuilds()
+    }
+    
+    stages {
+        stage('Scheduled Task Info') {
+            steps {
+                echo '========================================='
+                echo 'SCHEDULED BUILD INFORMATION'
+                echo '========================================='
+                echo "Build Number: ${env.BUILD_NUMBER}"
+                echo "Build Time: ${new Date()}"
+                echo "Triggered By: ${env.BUILD_CAUSE}"
+                echo "Job Name: ${env.JOB_NAME}"
+                echo '========================================='
+            }
+        }
+        
+        stage('Nightly Build') {
+            steps {
+                echo 'Running nightly build tasks...'
+                sh '''
+                    # Example: Build application
+                    echo "Building application..."
+                    # mvn clean package
+                    # npm run build
+                '''
+            }
+        }
+        
+        stage('Run Tests') {
+            steps {
+                echo 'Running automated tests...'
+                sh '''
+                    # Example: Run test suite
+                    echo "Running tests..."
+                    # mvn test
+                    # npm test
+                '''
+            }
+        }
+        
+        stage('Code Quality Scan') {
+            steps {
+                echo 'Running code quality scans...'
+                sh '''
+                    # Example: SonarQube scan
+                    echo "Running quality scan..."
+                    # sonar-scanner
+                '''
+            }
+        }
+        
+        stage('Security Scan') {
+            steps {
+                echo 'Running security scans...'
+                sh '''
+                    # Example: Dependency check
+                    echo "Scanning for vulnerabilities..."
+                    # npm audit
+                    # mvn dependency-check:check
+                '''
+            }
+        }
+        
+        stage('Database Backup') {
+            steps {
+                echo 'Creating database backup...'
+                sh '''
+                    # Example: Backup database
+                    echo "Backing up database..."
+                    # mysqldump -u user -p database > backup.sql
+                '''
+            }
+        }
+        
+        stage('Cleanup Old Builds') {
+            steps {
+                echo 'Cleaning up old artifacts...'
+                sh '''
+                    # Example: Clean old artifacts
+                    echo "Removing old files..."
+                    # find /path/to/artifacts -mtime +30 -delete
+                '''
+            }
+        }
+        
+        stage('Generate Reports') {
+            steps {
+                echo 'Generating reports...'
+                sh '''
+                    # Example: Generate daily reports
+                    echo "Generating HTML report..."
+                    echo "<html><body><h1>Daily Build Report</h1>" > report.html
+                    echo "<p>Build: ${BUILD_NUMBER}</p>" >> report.html
+                    echo "<p>Status: SUCCESS</p>" >> report.html
+                    echo "</body></html>" >> report.html
+                '''
+                
+                // Archive reports
+                archiveArtifacts artifacts: 'report.html', allowEmptyArchive: true
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Scheduled build completed successfully!'
+            mail(
+                to: 'devops-team@example.com',
+                subject: "✅ Scheduled Build Success - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                    Scheduled build completed successfully!
+                    
+                    Job: ${env.JOB_NAME}
+                    Build: #${env.BUILD_NUMBER}
+                    Time: ${new Date()}
+                    
+                    View build: ${env.BUILD_URL}
+                """
+            )
+        }
+        
+        failure {
+            echo 'Scheduled build failed!'
+            mail(
+                to: 'devops-team@example.com',
+                subject: "❌ Scheduled Build Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                    Scheduled build FAILED!
+                    
+                    Job: ${env.JOB_NAME}
+                    Build: #${env.BUILD_NUMBER}
+                    Time: ${new Date()}
+                    
+                    Check logs: ${env.BUILD_URL}console
+                """
+            )
+        }
+        
+        always {
+            echo 'Scheduled build pipeline completed'
+            // Clean workspace after build
+            cleanWs()
+        }
+    }
+}

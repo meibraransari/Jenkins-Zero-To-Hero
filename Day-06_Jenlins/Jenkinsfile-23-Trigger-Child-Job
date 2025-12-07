@@ -1,0 +1,31 @@
+// Trigger Child Job
+// Demonstrates triggering another Jenkins job
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building parent job...'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+        
+        stage('Trigger Child Job') {
+            steps {
+                build job: 'child-job', 
+                      wait: true,
+                      parameters: [
+                          string(name: 'ENV', value: 'production'),
+                          string(name: 'VERSION', value: '1.0.0')
+                      ]
+                echo 'Child job triggered and completed'
+            }
+        }
+    }
+}

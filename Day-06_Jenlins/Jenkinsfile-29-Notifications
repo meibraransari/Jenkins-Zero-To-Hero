@@ -1,0 +1,137 @@
+// Comprehensive Notifications
+// Demonstrates multiple notification methods: Email, Slack, Teams, Generic Webhook
+//
+// REQUIRED JENKINS PLUGINS:
+// - Email Extension Plugin (email-ext)
+// - Slack Notification Plugin (slack)
+// - Credentials Plugin (credentials)
+//
+// ADDITIONAL SETUP:
+// - Configure Email settings in Jenkins (Manage Jenkins > Configure System > Email Notification)
+// - Configure Slack workspace and add Jenkins integration
+// - Add Slack token as Jenkins credential (ID: 'slack-token')
+// - Add Teams webhook URL as Jenkins secret text (ID: 'teams-webhook')
+// - Add Generic webhook URL as Jenkins secret text (ID: 'generic-webhook')
+//
+pipeline {
+    agent any
+
+    environment {
+        // Slack
+        SLACK_CHANNEL   = '#jenkins-builds'
+        SLACK_CREDENTIAL = 'slack-token'        // Jenkins credential ID for Slack token
+
+        // Email
+        EMAIL_RECIPIENTS = 'team@example.com'
+
+        // Teams Webhook
+        TEAMS_WEBHOOK   = credentials('teams-webhook')  // Jenkins secret text
+        
+        General Webhook
+        GENERAL_WEBHOOK   = credentials('generic-webhook') // Secret text credential
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo "pull the project..."
+                // your build logic here
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Building the project..."
+                // your build logic here
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo "Running tests..."
+                // your test logic here
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Deploying..."
+                // your deploy logic here
+            }
+        }
+    }
+
+    post {
+
+        success {
+            echo "Build Success!"
+
+            // Slack Notification
+            slackSend(
+                channel: SLACK_CHANNEL,
+                tokenCredentialId: SLACK_CREDENTIAL,
+                color: '#00FF00',
+                message: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' completed successfully."
+            )
+
+            // Email Notification
+            mail(
+                to: EMAIL_RECIPIENTS,
+                subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "The build completed successfully.\nCheck console: ${env.BUILD_URL}"
+            )
+
+            // Teams Notification
+            sh """
+                curl -H 'Content-Type: application/json' \
+                -d '{ "text": "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER} completed successfully." }' \
+                $TEAMS_WEBHOOK
+            """
+            
+            // General Webhook
+            withCredentials([string(credentialsId: 'generic-webhook', variable: 'GEN_WEBHOOK')]) {
+                sh '''
+                    curl -X POST -H "Content-Type: application/json" \
+                    -d "{\"status\":\"SUCCESS\",\"job\":\"'$JOB_NAME'\",\"build\":\"'$BUILD_NUMBER'\",\"url\":\"'$BUILD_URL'\"}" \
+                    "$GEN_WEBHOOK"
+                '''
+            }
+        }
+
+        failure {
+            echo "Build Failed!"
+
+            slackSend(
+                channel: SLACK_CHANNEL,
+                tokenCredentialId: SLACK_CREDENTIAL,
+                color: '#FF0000',
+                message: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' has failed!"
+            )
+
+            mail(
+                to: EMAIL_RECIPIENTS,
+                subject: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "The build failed!\nCheck console: ${env.BUILD_URL}"
+            )
+
+            sh """
+                curl -H 'Content-Type: application/json' \
+                -d '{ "text": "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER} has failed!" }' \
+                $TEAMS_WEBHOOK
+            """
+
+        }
+
+        always {
+            echo "This is the final notification..."
+
+            slackSend(
+                channel: SLACK_CHANNEL,
+                tokenCredentialId: SLACK_CREDENTIAL,
+                color: '#CCCCCC',
+                message: "Build finished: '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+            )
+        }
+    }
+}

@@ -1,0 +1,32 @@
+// Manual Approval/Input Step
+// Demonstrates manual approval step before proceeding
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+        
+        stage('Await Approval') {
+            steps {
+                input message: 'Deploy to production?', ok: 'Yes, Deploy'
+            }
+        }
+        
+        stage('Deploy to Production') {
+            steps {
+                echo 'Deploying to production...'
+                // Add production deployment logic
+            }
+        }
+    }
+}

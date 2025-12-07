@@ -1,0 +1,47 @@
+// Docker Image Security Scan
+// Demonstrates security scanning of Docker images using Trivy
+//
+// REQUIRED JENKINS PLUGINS:
+// - Docker Pipeline Plugin (docker-workflow)
+// - Docker Plugin (docker-plugin)
+//
+// ADDITIONAL SETUP:
+// - Install Trivy on Jenkins agent: https://aquasecurity.github.io/trivy/
+// - Ensure Docker is installed and running on Jenkins agent
+//
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t myapp:latest .'
+                echo 'Docker image built'
+            }
+        }
+        
+        stage('Scan Docker Image') {
+            steps {
+                sh 'trivy image myapp:latest'
+                echo 'Security scan completed'
+            }
+        }
+        
+        stage('Push to Registry') {
+            steps {
+                echo 'Pushing to Docker registry...'
+                // Add docker push logic
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Security scan completed'
+        }
+        
+        failure {
+            echo 'Security vulnerabilities found or build failed!'
+        }
+    }
+}

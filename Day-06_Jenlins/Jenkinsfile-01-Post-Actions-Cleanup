@@ -1,0 +1,45 @@
+// Post Actions with Cleanup
+// Demonstrates post-build actions and workspace cleanup
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Sending notification....'
+            echo "_*${JOB_NAME}*_ executed with the Job status: *```${BUILD_STATUS}```*"
+            echo "Job Name: ${JOB_NAME} Job status: ${BUILD_STATUS} Build No: ${BUILD_NUMBER} Build URL: ${BUILD_URL}"
+            echo "jenkins-${NODE_NAME}-${JOB_NAME}-${EXECUTOR_NUMBER}"
+        }
+        
+        cleanup {
+            /* clean up our workspace */
+            deleteDir()
+            dir("${workspace}*") {
+                deleteDir()
+            }
+            dir("${workspace}@2") {
+                deleteDir()
+            }
+            dir("${workspace}@2@tmp") {
+                deleteDir()
+            }
+            dir("${workspace}@tmp") {
+                deleteDir()
+            }
+        }
+    }
+}

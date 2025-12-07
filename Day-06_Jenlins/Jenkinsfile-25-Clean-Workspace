@@ -1,0 +1,42 @@
+// Clean Workspace Post Action
+// Demonstrates workspace cleanup after build
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps { 
+                echo 'building...'
+                sh 'mkdir -p build'
+                sh 'echo "test" > build/output.txt'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'testing...'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo 'deploying...'
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Pipeline completed'
+        }
+        
+        success {
+            echo 'Build succeeded, cleaning workspace...'
+            cleanWs()
+        }
+        
+        failure {
+            echo 'Build failed, preserving workspace for debugging'
+        }
+    }
+}

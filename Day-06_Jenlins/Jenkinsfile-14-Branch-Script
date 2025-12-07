@@ -1,0 +1,30 @@
+// Branch-based Actions using Script
+// Demonstrates branch-based logic using script block
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+            }
+        }
+        
+        stage('Branch Actions') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        echo "Deploying to prod"
+                        // Add production deployment logic
+                    } else if (env.BRANCH_NAME == 'develop') {
+                        echo "Deploying to staging"
+                        // Add staging deployment logic
+                    } else {
+                        echo "Running dev tests"
+                        // Add development test logic
+                    }
+                }
+            }
+        }
+    }
+}

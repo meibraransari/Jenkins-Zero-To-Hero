@@ -1,0 +1,36 @@
+// Stash and Unstash Between Agents
+// Demonstrates stashing files on one agent and unstashing on another
+pipeline {
+    agent none
+    
+    stages {
+        stage('Build') {
+            agent { label 'linux-builder' }
+            steps {
+                echo 'Building on linux-builder...'
+                sh 'echo "artifact" > result.txt'
+                sh 'echo "more data" > data.json'
+                stash includes: 'result.txt, data.json', name: 'buildOutput'
+                echo 'Build artifacts stashed'
+            }
+        }
+        
+        stage('Test') {
+            agent { label 'linux-tester' }
+            steps {
+                unstash 'buildOutput'
+                sh 'cat result.txt'
+                sh 'cat data.json'
+                echo 'Testing with unstashed artifacts on linux-tester'
+            }
+        }
+        
+        stage('Deploy') {
+            agent { label 'linux-builder' }
+            steps {
+                unstash 'buildOutput'
+                echo 'Deploying with unstashed artifacts'
+            }
+        }
+    }
+}
