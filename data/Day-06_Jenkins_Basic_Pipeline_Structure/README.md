@@ -1,4 +1,4 @@
-# 🚀 Jenkins Basic Pipeline Structure - Day 06
+# 🚀 Day 06 — Jenkins Basic Pipeline Structure
 
 This directory contains **37 comprehensive Jenkinsfile examples** demonstrating various Jenkins pipeline patterns for daily DevOps use. Each example is a complete, standalone pipeline that can be used as-is or adapted to your needs.
 
