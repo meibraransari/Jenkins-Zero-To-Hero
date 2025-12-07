@@ -1,4 +1,4 @@
-# Jenkins Basic Pipeline Structure - Day 06
+# 🚀 Jenkins Basic Pipeline Structure - Day 06
 
 This directory contains **36 comprehensive Jenkinsfile examples** demonstrating various Jenkins pipeline patterns for daily DevOps use. Each example is a complete, standalone pipeline that can be used as-is or adapted to your needs.
 
@@ -443,3 +443,21 @@ View all available variables: `http://your-jenkins-url/env-vars.html`
 
 **Created for Jenkins Zero to Hero - Day 06**  
 *Jenkins Basic Pipeline Structure for Daily DevOps Routine*
+
+## 🧠 About This Project
+
+This project is maintained by **DevOps In Action**, mainly focusing on practical, hands-on DevOps setups for CI/CD automation, containerization, and infrastructure management.
+
+
+### 💼 Connect with Me 👇😊
+
+*   🔥 [**YouTube**](https://www.youtube.com/@DevOpsinAction?sub_confirmation=1)
+*   ✍️ [**Blog**](https://ibraransari.blogspot.com/)
+*   💼 [**LinkedIn**](https://www.linkedin.com/in/ansariibrar/)
+*   👨‍💻 [**GitHub**](https://github.com/meibraransari?tab=repositories)
+*   💬 [**Telegram**](https://t.me/DevOpsinActionTelegram)
+*   🐳 [**Docker Hub**](https://hub.docker.com/u/ibraransaridocker)
+
+### ⭐ If You Found This Helpful...
+
+***Please star the repo and share it! Thanks a lot!*** 🌟
