@@ -4,6 +4,7 @@
 ![Status](https://img.shields.io/badge/Status-Active-success)
 
 ✨ **Ready to go from *Zero to Hero* in Jenkins?** ✨
+
 If you’ve been wanting to master Jenkins from the very beginning — starting with installation and going all the way to building powerful, end-to-end CI/CD pipelines — **you’re in the perfect place!**
 
 This series will take you from a complete beginner to a confident Jenkins practitioner. Whether you're in DevOps, development, or just curious, this roadmap is designed to make learning **simple, practical, and fun!** 💡🔥
