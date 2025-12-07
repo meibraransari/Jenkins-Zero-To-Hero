@@ -12,8 +12,9 @@
 <b>Domain: </b> NA <br>
 
 
-
-Dockerfile
+This project is parameterized > Multi-line String Parameter 
+Name: Dockerfile
+Default Value:
 FROM hub.devopsinaction.lab/node:20-alpine AS builder
 WORKDIR /app
 COPY build_info .
@@ -26,7 +27,9 @@ COPY --from=builder /app /app
 COPY --from=builder /entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-Entrypoint
+This project is parameterized > Multi-line String Parameter 
+Name: Entrypoint
+Default Value:
 #!/bin/sh
 set -e
 #cd / && node /app/dist/index.js
