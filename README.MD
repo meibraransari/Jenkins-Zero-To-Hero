@@ -31,6 +31,7 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day ⌛** — [Multistage Pipeline (Single Agent)](#)   
 * ✔️ **Day ⌛** — [Multistage Pipeline (Multiple Agents)](#)
 * ✔️ **Day ⌛** — [Docker Build, Push And Deploy Pipeline](#)
+* ✔️ **Day ⌛** — [Start Job B from Job A on Success](#)
 * ✔️ **Day ⌛** — [Bulletproof Jenkins Deployment](#)
 * ✔️ **Day ⌛** — [Build a Node.js/Angular Project](#)
 * ✔️ **Day ⌛** — [Build a Maven/Gradle Project](#)
