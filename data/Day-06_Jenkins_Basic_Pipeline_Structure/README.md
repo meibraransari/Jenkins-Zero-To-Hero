@@ -19,6 +19,11 @@ This directory contains **37 comprehensive Jenkinsfile examples** demonstrating 
 
 ---
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/t3rnNCd9puE/maxresdefault.jpg)](https://youtu.be/t3rnNCd9puE)
+
+
 ## Basic Pipeline Structure
 
 ### 0. Basic Jenkins Pipeline Structure

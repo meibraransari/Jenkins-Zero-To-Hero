@@ -18,6 +18,10 @@ This script provides an interactive menu-driven interface to:
 - ✅ Container existence and status checks
 - ✅ Error handling and user notifications
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/2CkjOCzHn4Y/maxresdefault.jpg)](https://youtu.be/2CkjOCzHn4Y)
+
 ## 🔧 Prerequisites
 
 - **Docker** installed and running
