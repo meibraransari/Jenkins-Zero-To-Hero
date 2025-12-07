@@ -1,6 +1,6 @@
 # 🚀 Jenkins Basic Pipeline Structure - Day 06
 
-This directory contains **36 comprehensive Jenkinsfile examples** demonstrating various Jenkins pipeline patterns for daily DevOps use. Each example is a complete, standalone pipeline that can be used as-is or adapted to your needs.
+This directory contains **37 comprehensive Jenkinsfile examples** demonstrating various Jenkins pipeline patterns for daily DevOps use. Each example is a complete, standalone pipeline that can be used as-is or adapted to your needs.
 
 ## 📋 Table of Contents
 
@@ -20,6 +20,20 @@ This directory contains **36 comprehensive Jenkinsfile examples** demonstrating 
 ---
 
 ## Basic Pipeline Structure
+
+### 0. Basic Jenkins Pipeline Structure
+**File:** `Jenkinsfile-00-Basic_Structure`
+- Complete reference guide for Jenkins Pipeline syntax
+- All essential pipeline directives and options
+- Agent configurations (any, none, label, Docker)
+- Environment variables and credentials
+- Parameters (string, boolean, choice, text, password)
+- Triggers (cron, pollSCM, upstream)
+- Options (timeout, retry, timestamps, buildDiscarder)
+- Tools configuration (Maven, JDK, Gradle, etc.)
+- Stages and steps structure
+- Post-build actions (always, success, failure, cleanup)
+- **Perfect for**: Learning complete pipeline syntax reference
 
 ### 1. Post Actions with Cleanup
 **File:** `Jenkinsfile-01-Post-Actions-Cleanup`
@@ -330,6 +344,7 @@ This directory contains **36 comprehensive Jenkinsfile examples** demonstrating 
 
 | Use Case | Jenkinsfile |
 |----------|-------------|
+| Learn complete pipeline syntax | `Jenkinsfile-00-Basic_Structure` |
 | Need parameters in build | `Jenkinsfile-02-Parameters` |
 | Running tests in parallel | `Jenkinsfile-07-Parallel-Tests` |
 | Building with Docker | `Jenkinsfile-03-Timestamps-Docker` |
