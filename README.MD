@@ -30,6 +30,7 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day 06** — [Jenkins Basic Pipeline Structure](./data/Day-06_Jenkins_Basic_Pipeline_Structure/README.md)
 * ✔️ **Day ⌛** — [Multistage Pipeline (Single Agent)](#)   
 * ✔️ **Day ⌛** — [Multistage Pipeline (Multiple Agents)](#)
+* ✔️ **Day ⌛** — [Multi Environment Single Pipeline](#)
 * ✔️ **Day ⌛** — [Docker Build, Push And Deploy Pipeline](#)
 * ✔️ **Day ⌛** — [Start Job B from Job A on Success](#)
 * ✔️ **Day ⌛** — [Bulletproof Jenkins Deployment](#)
