@@ -35,6 +35,7 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day ⌛** — [Bulletproof Jenkins Deployment](#)
 * ✔️ **Day ⌛** — [Build a Node.js/Angular Project](#)
 * ✔️ **Day ⌛** — [Build a Maven/Gradle Project](#)
+* ✔️ **Day ⌛** — [Export Postgres Database and use it as Artifact](#)
 * ✔️ **Day ⌛** — [Triggers Jenkins Job Remotely](#)
 * ✔️ **Day ⌛** — [Jenkins User Management](#)
 * ✔️ **Day ⌛** — [Jenkins Job Backup & Restore](#)
