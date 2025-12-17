@@ -1,4 +1,4 @@
-# 🔐 Jenkins SSH Remote Server Configuration
+# 🚀 Day 08 — Jenkins SSH Remote Server Configuration 🔐
 
 > **Professional guide for securely configuring SSH connections from Jenkins to remote servers**
 
