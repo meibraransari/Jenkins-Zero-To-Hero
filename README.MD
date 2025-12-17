@@ -28,6 +28,8 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day 04** — [Jenkins Agent Tools Setup on Agent (Local) using Docker Compose](./data/Day-04_Jenkins-tools-setup/README.MD)
 * ✔️ **Day 05** — [Backup & Restore of Jenkins](./data/Day-05_Jenkins-Backup-Restore/README.MD)
 * ✔️ **Day 06** — [Jenkins Basic Pipeline Structure](./data/Day-06_Jenkins_Basic_Pipeline_Structure/README.md)
+* ✔️ **Day 07** — [Jenkins Job type](./data/Day-07_Jenkins_Job_type/README.MD)   
+* ✔️ **Day 08** — [Jenkins SSH Remote Server Configuration](./data/Day-08_Jenkins_SSH_Remote_Server_Configuration/README.MD) 
 * ✔️ **Day ⌛** — [Multistage Pipeline (Single Agent)](#)   
 * ✔️ **Day ⌛** — [Multistage Pipeline (Multiple Agents)](#)
 * ✔️ **Day ⌛** — [Multi Environment Single Pipeline](#)
