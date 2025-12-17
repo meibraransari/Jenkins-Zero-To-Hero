@@ -100,9 +100,21 @@ The organization folder automatically scans your GitHub organization and creates
 - **Many repositories?** → Organization Folder 🏢
 
 
+---
+
 ## 🧠 About This Project
 
-This project is maintained by **DevOps In Action**, mainly focusing on practical, hands-on DevOps setups for CI/CD automation, containerization, and infrastructure management.
+**Made with ❤️ for DevOps Engineers** 
+
+Powered by **DevOps In Action**, this repository offers **real-world, hands-on DevOps setups** for CI/CD pipelines, containerization, Kubernetes, cloud platforms (AWS, GCP, Azure), and infrastructure at scale.
+
+## 📝 License
+
+This guide is provided as-is for educational and professional use.
+
+## 🤝 Contributing
+
+Feel free to suggest improvements or report issues.
 
 
 ### 💼 Connect with Me 👇😊
