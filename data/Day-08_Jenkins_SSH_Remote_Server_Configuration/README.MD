@@ -126,12 +126,15 @@ chown -R $(whoami):$(whoami) /home/$(whoami)/.ssh
 
 ### 🚀 Step 5: Use in Jenkins Pipeline
 
-**Install SSH Agent Plugin**
+📦 **Install SSH Agent Plugin**
+Install the **SSH Agent Plugin** from the Jenkins plugin manager if not already installed:
+
 
 > In Jenkins UI:
 > 1. Navigate to: `Manage Jenkins` → `Manage Plugins` → `Available`
 > 2. Search for: `SSH Agent`
 > 3. Click `Install` → `Restart Jenkins`
+
 
 **Create new job to test it**
 ```groovy
@@ -213,13 +216,7 @@ The **Jenkins Credentials Store with SSH Agent Plugin** is the **best practice**
 - ✅ **Easy Management**: Simple rotation and credential management
 - ✅ **Security Best Practice**: Industry-standard approach
 
-### 📦 Installation
 
-Install the **SSH Agent Plugin** from the Jenkins plugin manager if not already installed:
-
-```
-Jenkins Dashboard → Manage Jenkins → Plugins → Available Plugins → Search "SSH Agent"
-```
 
 ---
 
