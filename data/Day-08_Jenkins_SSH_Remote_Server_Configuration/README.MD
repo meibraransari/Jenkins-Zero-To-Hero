@@ -220,6 +220,12 @@ The **Jenkins Credentials Store with SSH Agent Plugin** is the **best practice**
 
 ---
 
+## 🧠 About This Project
+
+**Made with ❤️ for DevOps Engineers**
+
+This project is maintained by **DevOps In Action**, mainly focusing on practical, hands-on DevOps setups for CI/CD automation, containerization, and infrastructure management.
+
 ## 📝 License
 
 This guide is provided as-is for educational and professional use.
@@ -227,14 +233,6 @@ This guide is provided as-is for educational and professional use.
 ## 🤝 Contributing
 
 Feel free to suggest improvements or report issues.
-
----
-
-**Made with ❤️ for DevOps Engineers**
-
-## 🧠 About This Project
-
-This project is maintained by **DevOps In Action**, mainly focusing on practical, hands-on DevOps setups for CI/CD automation, containerization, and infrastructure management.
 
 
 ### 💼 Connect with Me 👇😊
