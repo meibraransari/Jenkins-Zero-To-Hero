@@ -1,4 +1,4 @@
-# 🚀 Day 06 — Item Types Guide 📦
+# 🚀 Day 07 — Item Types Guide 📦
 
 A comprehensive guide to understanding different item types and their use cases.
 
