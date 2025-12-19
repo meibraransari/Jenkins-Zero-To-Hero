@@ -18,7 +18,7 @@ To enable Jenkins to connect to remote servers via SSH, you need to store the SS
 ---
 ## 🎬 Video Demonstration
 
-[![Watch on Youtube](https://i.ytimg.com/vi/FHt_vM5WMr8/maxresdefault.jpg)](https://youtu.be/FHt_vM5WMr8)
+[![Watch on Youtube](https://i.ytimg.com/vi/lqViSz2DUH8/maxresdefault.jpg)](https://youtu.be/lqViSz2DUH8)
 
 ---
 
