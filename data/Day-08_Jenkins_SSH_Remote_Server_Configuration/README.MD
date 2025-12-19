@@ -16,6 +16,11 @@
 To enable Jenkins to connect to remote servers via SSH, you need to store the SSH private key securely in Jenkins. This guide provides best practices and implementation steps for secure SSH authentication.
 
 ---
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/FHt_vM5WMr8/maxresdefault.jpg)](https://youtu.be/FHt_vM5WMr8)
+
+---
 
 ## ✨ Best Practice: Jenkins Credentials Store
 
@@ -54,8 +59,8 @@ sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_con
 sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
 
 # Restart SSH service
-service ssh restart
-service ssh status
+systemctl restart sshd
+systemctl status sshd
 ```
 
 ---
