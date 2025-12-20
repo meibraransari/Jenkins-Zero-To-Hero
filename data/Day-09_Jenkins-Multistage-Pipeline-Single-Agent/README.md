@@ -160,7 +160,9 @@ pipeline {
         
         stage('Deploy (Demo)') {
             when {
-                branch 'master'
+                expression {
+                    GIT_BRANCH == 'master'
+                }
             }
             steps {
                 echo "🚀 Deployment (demo step)..."
