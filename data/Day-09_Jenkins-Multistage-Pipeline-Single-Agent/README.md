@@ -4,6 +4,12 @@
 
 This guide demonstrates how to create a **multistage Jenkins pipeline** that runs all stages on a **single agent**. The pipeline builds a Node.js React application with multiple stages including checkout, dependency installation, testing, building, artifact archiving, and deployment.
 
+
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/SfiBGJQdKGI/maxresdefault.jpg)](https://youtu.be/SfiBGJQdKGI)
+
+
 ### What is a Multistage Pipeline?
 
 A multistage pipeline is a Jenkins pipeline that breaks down the CI/CD process into multiple discrete stages. Each stage represents a logical phase in the software delivery process.
