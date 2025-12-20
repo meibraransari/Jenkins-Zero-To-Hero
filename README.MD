@@ -31,18 +31,18 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day 07** — [Jenkins Job type](./data/Day-07_Jenkins_Job_type/README.MD)   
 * ✔️ **Day 08** — [Jenkins SSH Remote Server Configuration](./data/Day-08_Jenkins_SSH_Remote_Server_Configuration/README.MD) 
 * ✔️ **Day 09** — [Multistage Pipeline (**Single Agent**)](./data/Day-09_Jenkins-Multistage-Pipeline-Single-Agent/README.md)
-* ✔️ **Day ⌛** — [Multistage Pipeline Multiple Agents](#)
-* ✔️ **Day ⌛** — [Multi Environment Single Pipeline](#)
-* ✔️ **Day ⌛** — [Docker Build Push And Deploy Pipeline](#)
-* ✔️ **Day ⌛** — [Start Job B from Job A on Success](#)
-* ✔️ **Day ⌛** — [Bulletproof Jenkins Deployment](#)
-* ✔️ **Day ⌛** — [Build a Node.js/Angular Project](#)
-* ✔️ **Day ⌛** — [Build a Maven/Gradle Project](#)
-* ✔️ **Day ⌛** — [Export Postgres Database and use it as Artifact](#)
-* ✔️ **Day ⌛** — [Triggers Jenkins Job Remotely](#)
-* ✔️ **Day ⌛** — [Jenkins User Management](#)
-* ✔️ **Day ⌛** — [Jenkins Job Backup & Restore](#)
-* ✔️ **Day ⌛** — [Jenkins Server Upgrade](#)
-* ✔️ **Day ⌛** — [Terraform Automation with Jenkins](#) - Will cover in Terraform Series.
-* ✔️ **Day ⌛** — [Ansible Deployment Pipeline](#) - Will cover in Ansible Series.
-* ✔️ **Day ⌛** — [Kubernetes Deployment](#)  - Will cover in Kubernetes Series.
+* ⌛ **Day ** — [Multistage Pipeline Multiple Agents](#)
+* ⌛ **Day ** — [Multi Environment Single Pipeline](#)
+* ⌛ **Day ** — [Docker Build Push And Deploy Pipeline](#)
+* ⌛ **Day ** — [Start Job B from Job A on Success](#)
+* ⌛ **Day ** — [Bulletproof Jenkins Deployment](#)
+* ⌛ **Day ** — [Build a Node.js/Angular Project](#)
+* ⌛ **Day ** — [Build a Maven/Gradle Project](#)
+* ⌛ **Day ** — [Export Postgres Database and use it as Artifact](#)
+* ⌛ **Day ** — [Triggers Jenkins Job Remotely](#)
+* ⌛ **Day ** — [Jenkins User Management](#)
+* ⌛ **Day ** — [Jenkins Job Backup & Restore](#)
+* ⌛ **Day ** — [Jenkins Server Upgrade](#)
+* ⌛ **Day ** — [Terraform Automation with Jenkins](#) - Will cover in Terraform Series.
+* ⌛ **Day ** — [Ansible Deployment Pipeline](#) - Will cover in Ansible Series.
+* ⌛ **Day ** — [Kubernetes Deployment](#)  - Will cover in Kubernetes Series.
