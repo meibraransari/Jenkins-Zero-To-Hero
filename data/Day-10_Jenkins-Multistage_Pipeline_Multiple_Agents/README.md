@@ -291,7 +291,7 @@ pipeline {
 During the implementation, we encountered three issues. Below are the problems and their solutions:
 
 ---
-### ❌ Issue 1: Docker Registry TLS Certificate Verification Failed
+### ❌ Issue 1: SSH Credentials name not found
 ERROR: a3c6d7ba-d97e-492a-a54a-3b68ff600407
 
 
