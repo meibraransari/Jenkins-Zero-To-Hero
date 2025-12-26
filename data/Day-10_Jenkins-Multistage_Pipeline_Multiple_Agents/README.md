@@ -10,6 +10,11 @@ We are going to use Day 9 jenkins pipeline in Day 10 with some improvements. In 
 - **Agent 'mgmt'** - for deployment via SSH
 - **When Expression** - when { expression { true } } #To disable and enable stage
 
+
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/v8vQYXbX25Y/maxresdefault.jpg)](https://youtu.be/v8vQYXbX25Y)
+
 ---
 
 ## 🏗️ Architecture
@@ -374,7 +379,7 @@ CONTAINER ID   IMAGE                                                    COMMAND 
 215cd4e93d09   jenkins/ssh-agent:jdk21                                  "/entrypoint.sh"         9 seconds ago   Up 8 seconds (health: starting)   0.0.0.0:2020->22/tcp, :::2020->22/tcp   jenkins_agent
 
 
-# Verify node ajent SSH key again
+# Verify node agent SSH key again
 Jenkins > setting > node > sg > Trust SSH Host Key (Yes)
 
 ```
