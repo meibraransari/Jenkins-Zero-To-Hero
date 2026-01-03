@@ -32,7 +32,7 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day 08** — [Jenkins SSH Remote Server Configuration](./data/Day-08_Jenkins_SSH_Remote_Server_Configuration/README.MD) 
 * ✔️ **Day 09** — [Multistage Pipeline (**Single Agent**)](./data/Day-09_Jenkins-Multistage-Pipeline-Single-Agent/README.md)
 * ✔️ **Day 10** — [Multistage Pipeline (**Multi-Agents**)](./data/Day-10_Jenkins-Multistage_Pipeline_Multiple_Agents/README.md)
-*  **Day ⌛** — [Multi-platform Docker Build Pipeline](#)
+* ✔️ **Day 11** — [Multi-platform Docker Build Pipeline](./data/Day-11_Jenkins-Multi-platform_Docker_Build_Pipeline/README.md)
 *  **Day ⌛** — [Multi Environment Single Pipeline](#)
 *  **Day ⌛** — [Docker Build Push And Deploy Pipeline](#)
 *  **Day ⌛** — [Start Job B from Job A on Success](#)
