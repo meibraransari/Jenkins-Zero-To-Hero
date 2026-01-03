@@ -1,4 +1,4 @@
-# 🚀 Day 11 — Jenkins Multi-platform Docker Build Pipeline - Complete Guide
+# 🚀 Day 11 — Jenkins Multi-Platform Docker Build, Push and Deploy Pipeline - Complete Guide
 
 ## 📋 Overview
 
@@ -27,12 +27,9 @@ Building on Day 10's multi-agent pipeline, we're adding:
 The pipeline follows a multi-stage workflow with enhanced Docker build capabilities:
 
 1. **Checkout** - Clone the source code from Git repository
-2. **Install Dependencies** - Install npm packages (inherited from Day 9)
-3. **Test** - Run automated tests (inherited from Day 9)
-4. **Build** - Build the React application (inherited from Day 9)
-5. **Prepare Environment** - Prepare build metadata and Dockerfile
-6. **🆕 Build & Push Multi-Platform Docker Image** - Create and push images for multiple CPU architectures
-7. **Deploy Over SSH** - Deploy the container to production server
+2. **Prepare Environment** - Prepare build metadata and Dockerfile
+3. **Build & Push Multi-Platform Docker Image** - Create and push images for multiple CPU architectures
+4. **Deploy Over SSH** - Deploy the container to production server
 
 
 ---
@@ -90,6 +87,7 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 # Copy build output from previous stage
 COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/build_info /build_info
 # Expose HTTP port
 EXPOSE 80
 # Start nginx
@@ -158,48 +156,6 @@ pipeline {
                 script {
                     currentBuild.description = "Env=${DEPLOY_ENV}, Branch=${GIT_BRANCH}"
                 }
-            }
-        }
-        stage('Install Dependencies') {
-            when { expression { false } }
-            agent { label 'sg' }
-            options {
-                retry(2)
-                timeout(time: 5, unit: 'MINUTES')
-            }
-            steps {
-                echo "📦 Installing dependencies..."
-                sh 'node --version'
-                sh "npm install"
-            }
-        }
-        
-        stage('Test') {
-            when { expression { false } }
-            agent { label 'sg' }
-            steps {
-                echo "🧪 Running tests..."
-                sh "npm test"
-            }
-        }
-        
-        stage('Build') {
-            when { expression { false } }   
-            agent { label 'sg' }
-            options {
-                timeout(time: 10, unit: 'MINUTES')
-            }
-            steps {
-                echo "🔧 Building app..."
-                sh "npm run build"
-            }
-        }
-        stage('Archive Artifacts') {
-            when { expression { false } }
-            agent { label 'sg' }
-            steps {
-                echo "📁 Archiving build artifacts..."
-                archiveArtifacts artifacts: 'build/**', fingerprint: true
             }
         }
         stage ('Prepare Environment') {
