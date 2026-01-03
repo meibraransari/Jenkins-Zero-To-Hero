@@ -169,7 +169,7 @@ pipeline {
                     sh 'rm -rf build_info'
                     sh 'TZ="Asia/Kolkata" date "+Build Time: %d-%m-%Y %H:%M:%S %Z" | tee -a build_info'
                     sh 'echo "Jenkins Build Number: ${BUILD_NUMBER}" | tee >> build_info'
-                    sh 'echo "Git Branch: ${web_git_branch}" | tee >> build_info'
+                    sh 'echo "Git Branch: ${GIT_BRANCH}" | tee >> build_info'
                     
             }
         }
