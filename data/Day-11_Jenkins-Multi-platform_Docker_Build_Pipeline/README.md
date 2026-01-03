@@ -296,13 +296,13 @@ This error occurs when the Docker CLI plugins are not available to the Jenkins a
 
 **✅ Solution: Mount Docker CLI Plugins to Jenkins Agent** 
 ```bash
-# Check buildx version
-docker buildx version
-# check with root user
+# check buildx version with root user in agent
 docker exec -it jenkins_agent docker buildx version
-# check with jenkins user
+# check buildx version with jenkins user in agent
 docker exec -it -u jenkins jenkins_agent docker buildx version
 
+# Check buildx version on Host (Where agent is deployed)
+docker buildx version
 # Plugin must be installed on host
 https://docs.docker.com/engine/install/ubuntu/
 
@@ -335,14 +335,14 @@ docker compose up -d
 # Verify node agent SSH key again
 Jenkins > setting > node > sg > Trust SSH Host Key (Yes)
 
-# Check again buildx version
-docker buildx version
-# check with root user
+# check buildx version with root user in agent
 docker exec -it jenkins_agent docker buildx version
-# check with jenkins user
+# check buildx version with jenkins user in agent
 docker exec -it -u jenkins jenkins_agent docker buildx version
 
+
 ```
+> **🎯 Run Jenkins job again**
 
 
 ---
