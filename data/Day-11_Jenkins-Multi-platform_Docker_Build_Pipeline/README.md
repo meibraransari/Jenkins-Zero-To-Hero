@@ -408,6 +408,9 @@ Access the deployed application using the production server IP and port:
 
 ```
 http://192.168.1.210:8000/
+
+# Check build information
+docker exec -it <ID> cat /build_info
 ```
 
 ---
