@@ -4,6 +4,10 @@
 
 This guide demonstrates how to build **multi-platform Docker images** (supporting both ARM64 and AMD64 architectures) using Jenkins pipeline with **Docker Buildx**. Building multi-platform images ensures your containers run seamlessly across different CPU architectures, from development laptops (Apple Silicon, AMD processors) to production servers.
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/9Z8qNSYfc6s/maxresdefault.jpg)](https://youtu.be/9Z8qNSYfc6s)
+
 ### 🆕 What's New in Day 11?
 
 Building on Day 10's multi-agent pipeline, we're adding:
