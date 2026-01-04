@@ -31,6 +31,24 @@ The pipeline follows a multi-stage workflow with enhanced Docker build capabilit
 3. **Build & Push Multi-Platform Docker Image** - Create and push images for multiple CPU architectures
 4. **Deploy Over SSH** - Deploy the container to production server
 
+---
+
+## 🔹 Common Linux Architectures
+When building multi-platform images, you specify the target architectures using the `--platform` flag. This allows a single image tag to point to multiple architecture-specific image manifests. Here are the most common architecture identifiers:
+
+linux/amd64        # 64-bit x86 (most servers, PCs)
+linux/386          # 32-bit x86 (legacy systems)
+linux/arm64        # ARM 64-bit (Apple M1/M2, AWS Graviton)
+linux/arm/v7       # ARM 32-bit (Raspberry Pi 3/4)
+linux/arm/v6       # Older ARM (Raspberry Pi Zero)
+linux/ppc64le      # IBM PowerPC (little-endian)
+linux/s390x        # IBM Z / Mainframe
+linux/riscv64      # RISC-V 64-bit
+
+---
+
+##  🔎 Tip: Check Supported Platforms
+docker buildx inspect --bootstrap
 
 ---
 
