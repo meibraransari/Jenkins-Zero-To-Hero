@@ -132,12 +132,12 @@ The pipeline requires the following credentials configured in Jenkins:
 
 
 2. **Configure Jenkins Credentials**:
-   - Add Docker registry credentials
+   - Add Docker registry credentials in jenkins
 
 3. **Create Jenkins Pipeline Job**:
    - Create new Pipeline job
    - Add choice parameter `ENVIRONMENT` with values: dev, qa, uat, prod
-   - Copy the Jenkinsfile from RAEDME.md to pipeline script
+   - Copy the Jenkinsfile from RAEDME.md to pipeline script from [here](https://github.com/meibraransari/nodejs-demo/blob/main/jenkinsfile)
 
 4. **Run the Pipeline**:
    - Select desired environment
