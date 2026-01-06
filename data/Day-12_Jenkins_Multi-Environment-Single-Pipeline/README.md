@@ -121,6 +121,7 @@ The pipeline requires the following credentials configured in Jenkins:
 
 1. **Create Git Branches**:
    ```bash
+   # Create branches
    git checkout -b dev
    git checkout -b qa
    git checkout -b uat
@@ -162,8 +163,10 @@ Each Docker image includes a `build_info` file containing:
 - Jenkins build number
 - Git branch name
 
-# Check build information
+## ✅ Check build information
+```bash
 docker exec -it <CONTAINER_ID> cat /build_info
+```
 
 ## 🎯 Benefits of This Approach
 
