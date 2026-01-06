@@ -120,13 +120,16 @@ The pipeline requires the following credentials configured in Jenkins:
 ### Setup Steps
 
 1. **Create Git Branches**:
+   - https://github.com/meibraransari/nodejs-demo
+
    ```bash
-   # Create branches
+   # Create branches 
    git checkout -b dev
    git checkout -b qa
    git checkout -b uat
    git checkout -b prod
    ```
+
 
 2. **Configure Jenkins Credentials**:
    - Add Docker registry credentials
