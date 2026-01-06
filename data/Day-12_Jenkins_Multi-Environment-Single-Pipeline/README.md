@@ -119,7 +119,7 @@ The pipeline requires the following credentials configured in Jenkins:
 
 ### Setup Steps
 
-1. **Create Git Branches**:
+1. **Manage Git Branches**:
    - https://github.com/meibraransari/nodejs-demo
 
    ```bash
