@@ -162,8 +162,7 @@ Each Docker image includes a `build_info` file containing:
 - Build timestamp (Asia/Kolkata timezone)
 - Jenkins build number
 - Git branch name
-
-## ✅ Check build information
+- Check build information using below command
 ```bash
 docker exec -it <CONTAINER_ID> cat /build_info
 ```
