@@ -1,4 +1,4 @@
-# 🚀 Day 12 — Jenkins Multi-Environment Single Pipeline - Complete Guide
+# 🚀 Day 12 — Multi Environment Single Pipeline (Docker Build and Push) - Complete Guide
 
 ## 📋 Overview
 
