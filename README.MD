@@ -33,7 +33,7 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day 09** — [Multistage Pipeline (**Single Agent**)](./data/Day-09_Jenkins-Multistage-Pipeline-Single-Agent/README.md)
 * ✔️ **Day 10** — [Multistage Pipeline (**Multi-Agents**)](./data/Day-10_Jenkins-Multistage_Pipeline_Multiple_Agents/README.md)
 * ✔️ **Day 11** — [Multi-platform Docker Build Push and Deploy Pipeline](./data/Day-11_Jenkins-Multi-platform_Docker_Build_Pipeline/README.md)
-*  **Day ⌛** — [Multi Environment Single Pipeline](./data/Day-12_Jenkins_Multi-Environment-Single-Pipeline/README.md)
+* ✔️ **Day 12** — [Multi Environment Single Pipeline](./data/Day-12_Jenkins_Multi-Environment-Single-Pipeline/README.md)
 *  **Day ⌛** — [Start Job B from Job A on Success](#)
 *  **Day ⌛** — [Bulletproof Jenkins Deployment](#)
 *  **Day ⌛** — [Build a Node.js/Angular Project](#)
