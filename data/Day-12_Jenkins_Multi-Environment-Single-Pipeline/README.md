@@ -13,6 +13,11 @@ This project demonstrates a **multi-environment Jenkins pipeline** that builds a
 - ✅ **Node.js Demo App**: Simple Express application that displays client IP and environment info
 
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/m8fZmacU3H4/maxresdefault.jpg)](https://youtu.be/m8fZmacU3H4)
+
+
 ## 🔧 Application Details
 
 ### Node.js Application (app.js)
