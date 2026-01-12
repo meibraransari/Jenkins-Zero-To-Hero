@@ -35,7 +35,7 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day 11** — [Multi-platform Docker Build Push and Deploy Pipeline](./data/Day-11_Jenkins-Multi-platform_Docker_Build_Pipeline/README.md)
 * ✔️ **Day 12** — [Multi Environment Single Pipeline (**Docker Build and Push**)](./data/Day-12_Jenkins_Multi-Environment-Single-Pipeline/README.md)
 * ✔️ **Day 13** — [Build a Node.js/React Project](./data/Day-13_Jenkins_Build_Nodejs_and_React_Project/README.md)
-*  **Day ⌛** — [Build a Maven Project](./data/Day-14_Jenkins_Build_Maven_Project/README.md)
+* ✔️ **Day 14** — [Build a Maven Project](./data/Day-14_Jenkins_Build_Maven_Project/README.md)
 *  **Day ⌛** — [Export Postgres Database and use it as Artifact](#)
 *  **Day ⌛** — [Bulletproof Jenkins Deployment](#)
 *  **Day ⌛** — [Start Job B from Job A on Success](#)
