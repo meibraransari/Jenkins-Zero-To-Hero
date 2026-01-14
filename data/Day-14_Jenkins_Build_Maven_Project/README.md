@@ -14,6 +14,11 @@ This guide demonstrates a complete **Jenkins CI/CD pipeline** for building, cont
 - ✅ **Email Notifications**: Success/failure alerts
 - ✅ **Retry Mechanism**: Automatic retry on failures
 
+
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/QrOvhrBoXJk/maxresdefault.jpg)](https://youtu.be/QrOvhrBoXJk)
+
 ## 🏗️ Architecture
 
 ```mermaid
