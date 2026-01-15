@@ -11,6 +11,11 @@ This Jenkins pipeline automates the process of **exporting a PostgreSQL database
 
 ---
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/nCQCEGV7BrU/maxresdefault.jpg)](https://youtu.be/nCQCEGV7BrU)
+
+
 ## 🏗️ Pipeline Architecture
 
 ```mermaid
