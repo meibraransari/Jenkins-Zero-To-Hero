@@ -1,0 +1,97 @@
+#!/bin/bash
+# Jenkins Job Config Backup & Restore Script
+
+# ===== CONFIGURATION =====
+JENKINS_BASE="/HDD2TB/iansari/jenkins"
+JOBS_DIR="$JENKINS_BASE/jenkins_data/jobs"
+BACKUP_BASE="$JENKINS_BASE/jenkins_job_backup"
+
+# Ensure backup base directory exists
+mkdir -p "$BACKUP_BASE"
+
+take_backup() {
+    DATE=$(date +"%d-%b-%Y_%H-%M-%S")
+    DESTINATION_DIR="$BACKUP_BASE/$DATE"
+
+    echo "💾 Starting Jenkins job config backup..."
+    mkdir -p "$DESTINATION_DIR"
+
+    for job_dir in "$JOBS_DIR"/*; do
+        [[ -d "$job_dir" ]] || continue
+
+        job_name=$(basename "$job_dir")
+        mkdir -p "$DESTINATION_DIR/$job_name"
+
+        if [[ -f "$job_dir/config.xml" ]]; then
+            cp "$job_dir/config.xml" "$DESTINATION_DIR/$job_name/"
+            echo "✅ Backed up: $job_name"
+        else
+            echo "⚠️ No config.xml found for: $job_name"
+        fi
+    done
+
+    echo "================================="
+    echo "✅ Backup completed!"
+    echo "📁 Backup location: $DESTINATION_DIR"
+    echo "================================="
+    tree "$DESTINATION_DIR"
+
+    read -n1 -r -p "Press any key to continue..."
+}
+
+restore_backup() {
+    LATEST_BACKUP=$(ls -td "$BACKUP_BASE"/*/ 2>/dev/null | head -1)
+
+    if [[ -z "$LATEST_BACKUP" ]]; then
+        echo "⚠️ No backups found!"
+        read -n1 -r -p "Press any key to continue..."
+        return
+    fi
+
+    echo "♻️ Restoring Jenkins job configs from:"
+    echo "📁 $LATEST_BACKUP"
+    echo "---------------------------------"
+
+    for job_backup_dir in "$LATEST_BACKUP"/*; do
+        [[ -d "$job_backup_dir" ]] || continue
+
+        job_name=$(basename "$job_backup_dir")
+        target_job_dir="$JOBS_DIR/$job_name"
+
+        mkdir -p "$target_job_dir"
+
+        if [[ -f "$job_backup_dir/config.xml" ]]; then
+            cp "$job_backup_dir/config.xml" "$target_job_dir/"
+            echo "✅ Restored: $job_name"
+        else
+            echo "⚠️ Missing config.xml for: $job_name"
+        fi
+    done
+
+    echo "================================="
+    echo "✅ Restore completed!"
+    echo "⚠️ Restart Jenkins if required"
+    echo "================================="
+
+    read -n1 -r -p "Press any key to continue..."
+}
+
+# ===== MENU LOOP =====
+while true; do
+    clear
+    echo "======================================"
+    echo "🛠 Jenkins Job Config Backup & Restore"
+    echo "======================================"
+    echo "1. Take backup (job config.xml)"
+    echo "2. Restore latest backup"
+    echo "x. Exit"
+    echo "======================================"
+    read -rp "Enter your choice: " choice
+
+    case "$choice" in
+        1) take_backup ;;
+        2) restore_backup ;;
+        x|X) echo "👋 Exiting..."; exit 0 ;;
+        *) echo "⚠️ Invalid option!"; sleep 1 ;;
+    esac
+done
