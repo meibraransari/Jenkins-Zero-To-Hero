@@ -93,7 +93,7 @@ This pipeline implements a **pull-based GitOps deployment model** where Git is t
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                            JENKINS CI SERVER                            │
 │   ┌──────────────┐          ┌──────────────┐          ┌──────────────┐  │
-│   │ Build Image  │─────────▶│  Tag Image   │─────────▶│  Push Image  │  │
+│   │ Build Image  │────────▶│  Tag Image   │─────────▶│  Push Image  │  │
 │   │              │          │   (1.2.3)    │          │  to Registry │  │
 │   └──────────────┘          └──────┬───────┘          └──────────────┘  │
 │                                    │                                    │
@@ -114,14 +114,14 @@ This pipeline implements a **pull-based GitOps deployment model** where Git is t
                                      ▼
 ┌────────────────────────────────────┴────────────────────────────────────┐
 │                      GIT REPOSITORY (prod branch)                       │
-│              📝 docker-compose.yml (updated image tag)                  │
+│              📝 docker-compose.yml (updated image tag)                 │
 └────────────────────────────────────┬────────────────────────────────────┘
                                      │
                                      ▼
 ┌────────────────────────────────────┴────────────────────────────────────┐
 │                          PRODUCTION SERVER                              │
 │   ┌──────────────┐          ┌──────────────┐          ┌──────────────┐  │
-│   │   Git Pull   │─────────▶│ Docker Pull  │─────────▶│  Compose Up  │  │
+│   │   Git Pull   │────────▶│ Docker Pull  │─────────▶│  Compose Up  │  │
 │   │  (via SSH)   │          │  New Image   │          │      -d      │  │
 │   └──────────────┘          └──────────────┘          └──────┬───────┘  │
 │                                                              │          │
