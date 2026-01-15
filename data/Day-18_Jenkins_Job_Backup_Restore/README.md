@@ -14,6 +14,10 @@ Interactive shell script to backup and restore Jenkins job configurations (`conf
 
 ---
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/-uo5pTo8Fuo/maxresdefault.jpg)](https://youtu.be/-uo5pTo8Fuo)
+
 ## 🛠️ Installation
 
 ### Step 1: Copy Script

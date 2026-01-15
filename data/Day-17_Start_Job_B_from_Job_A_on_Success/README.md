@@ -14,6 +14,11 @@ Chain Jenkins jobs together! Job A triggers Job B automatically upon successful 
 
 ---
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/WRR69Ghcv5g/maxresdefault.jpg)](https://youtu.be/WRR69Ghcv5g)
+
+
 ## 🔧 Job Configurations
 
 ### 📦 Job-A (Upstream Job)

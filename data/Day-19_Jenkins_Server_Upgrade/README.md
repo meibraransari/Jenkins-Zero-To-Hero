@@ -6,6 +6,11 @@ Upgrading your Jenkins server is a critical maintenance task that ensures you ha
 
 ---
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/9I3D_nUY_Ls/maxresdefault.jpg)](https://youtu.be/9I3D_nUY_Ls)
+
+
 ## 🐳 Docker Compose Reference
 
 Below is a typical Jenkins Docker Compose configuration. This serves as a reference for understanding the deployment structure:
