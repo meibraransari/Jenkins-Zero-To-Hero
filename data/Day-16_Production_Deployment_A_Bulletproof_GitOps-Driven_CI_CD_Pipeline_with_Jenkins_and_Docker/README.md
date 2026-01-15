@@ -30,6 +30,11 @@ This project demonstrates a **production-grade GitOps-driven CI/CD pipeline** th
 
 ---
 
+## 🎬 Video Demonstration
+
+[![Watch on Youtube](https://i.ytimg.com/vi/Ry9MYjqtxZM/maxresdefault.jpg)](https://youtu.be/Ry9MYjqtxZM)
+
+
 ## 🔧 Prerequisites
 
 Before implementing this pipeline, ensure you have the following components configured:
