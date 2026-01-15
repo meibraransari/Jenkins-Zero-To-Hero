@@ -38,7 +38,7 @@ Let’s kickstart your DevOps journey together! 🚀✨
 * ✔️ **Day 14** — [Build a Maven Project](./data/Day-14_Jenkins_Build_Maven_Project/README.md)
 * ✔️ **Day 15** — [Export Postgres Database and use it as Artifact](./data/Day-15_Export_Postgres_Database_and_use_it_as_Artifact/README.md)
 * ✔️ **Day 16** — [Production Deployment : A Bulletproof GitOps-Driven CI/CD Pipeline with Jenkins and Docker](./data/Day-16_Production_Deployment_A_Bulletproof_GitOps-Driven_CI_CD_Pipeline_with_Jenkins_and_Docker/README.md)
-*  **Day 17** — [Start Job B from Job A on Success](./data/Day-17_Start_Job_B_from_Job_A_on_Success/README.md)
+* ✔️ **Day 17** — [Start Job B from Job A on Success](./data/Day-17_Start_Job_B_from_Job_A_on_Success/README.md)
 *  **Day ⌛** — [Triggers Jenkins Job Remotely](#)
 *  **Day ⌛** — [Jenkins User Management](#)
 *  **Day ⌛** — [Jenkins Job Backup & Restore](#)
