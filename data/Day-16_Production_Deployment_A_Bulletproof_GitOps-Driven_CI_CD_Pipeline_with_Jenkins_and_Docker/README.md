@@ -623,19 +623,19 @@ sequenceDiagram
 Add health checks to your `docker-compose.yml`:
 
 ```yaml
-version: '3.8'
 services:
-  app:
-    image: hub.devopsinaction.lab/project-a-prod:latest
+  project-a:
+    image: hub.devopsinaction.lab/project-a-prod"
+    container_name: project-a-prod
     ports:
-      - "80:3000"
+      - "3000:3000"
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 10s
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 40s
-    restart: unless-stopped
+      start_period: 10s
 ```
 
 ### Health Check Best Practices
